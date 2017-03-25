@@ -35,7 +35,7 @@ namespace UNR_Crossroad.Data
 
         public static int GetAccLevel(string name)
         {
-            command = new SQLiteCommand("SELECT * FROM 'Users' WHERE login='"+name+"';", connect);
+            command = new SQLiteCommand("SELECT * FROM 'Users' WHERE login='" + name + "';", connect);
             reader = command.ExecuteReader();
             int lvl = 0;
             foreach (DbDataRecord record in reader)
@@ -47,7 +47,7 @@ namespace UNR_Crossroad.Data
 
         public static string AddUser(string login, string pass, int lvl)
         {
-            command = new SQLiteCommand("INSERT INTO 'Users' ('id','login','password','level') VALUES ((SELECT MAX(id) FROM Users)+1,'"+login+"','"+pass+"',"+lvl+");",connect);
+            command = new SQLiteCommand("INSERT INTO 'Users' ('id','login','password','level') VALUES ((SELECT MAX(id) FROM Users)+1,'" + login + "','" + pass + "'," + lvl + ");", connect);
             command.ExecuteNonQuery();
             return "Пользователь добавлен";
         }
