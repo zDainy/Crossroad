@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UNR_Crossroad", "UNR_Crossroad\UNR_Crossroad.csproj", "{7E6E5168-6B3D-49D8-AC2D-D671765D4024}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UNR_Crossroad.Core", "UNR_Crossroad.Core\UNR_Crossroad.Core.csproj", "{1D7562D6-E95E-49DC-8D5B-FB42884CDE17}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UNR_Crossroad.Data", "UNR_Crossroad.Data\UNR_Crossroad.Data.csproj", "{CE8C56A4-23EE-4AA0-9CA6-7E3BEF846EEF}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7E6E5168-6B3D-49D8-AC2D-D671765D4024}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7E6E5168-6B3D-49D8-AC2D-D671765D4024}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7E6E5168-6B3D-49D8-AC2D-D671765D4024}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7E6E5168-6B3D-49D8-AC2D-D671765D4024}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1D7562D6-E95E-49DC-8D5B-FB42884CDE17}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1D7562D6-E95E-49DC-8D5B-FB42884CDE17}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1D7562D6-E95E-49DC-8D5B-FB42884CDE17}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1D7562D6-E95E-49DC-8D5B-FB42884CDE17}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CE8C56A4-23EE-4AA0-9CA6-7E3BEF846EEF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CE8C56A4-23EE-4AA0-9CA6-7E3BEF846EEF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CE8C56A4-23EE-4AA0-9CA6-7E3BEF846EEF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CE8C56A4-23EE-4AA0-9CA6-7E3BEF846EEF}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
