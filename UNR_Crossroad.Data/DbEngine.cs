@@ -45,6 +45,20 @@ namespace UNR_Crossroad.Data
             return lvl;
         }
 
+        public static bool UserCheck(string name, string pass)
+        {
+            command = new SQLiteCommand($"SELECT * FROM 'Users' WHERE login='{name}' AND password='{pass}';", connect);
+            reader = command.ExecuteReader();
+            return reader.HasRows;
+        }
+
+        public static bool LoginCheck(string name)
+        {
+            command = new SQLiteCommand($"SELECT * FROM 'Users' WHERE login='{name}';", connect);
+            reader = command.ExecuteReader();
+            return reader.HasRows;
+        }
+
         public static string AddUser(string login, string pass, int lvl)
         {
             command = new SQLiteCommand($"INSERT INTO 'Users' ('id','login','password','level') VALUES ((SELECT MAX(id) FROM Users)+1,'{login}','{pass}',{lvl});",connect);

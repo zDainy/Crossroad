@@ -1,4 +1,5 @@
 ﻿using System.Windows.Forms;
+using UNR_Crossroad.Core;
 
 namespace UNR_Crossroad
 {
@@ -40,9 +41,9 @@ namespace UNR_Crossroad
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.panel_user_dop = new System.Windows.Forms.Panel();
             this.btn_ch_road = new System.Windows.Forms.Button();
+            this.panel_user = new UNR_Crossroad.BufferedPanel();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
-            this.panel_user = new UNR_Crossroad.BufferedPanel();
             this.menuStrip1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -152,9 +153,17 @@ namespace UNR_Crossroad
             this.btn_ch_road.Name = "btn_ch_road";
             this.btn_ch_road.Size = new System.Drawing.Size(180, 82);
             this.btn_ch_road.TabIndex = 0;
-            this.btn_ch_road.Text = "Выбор перекрестка";
+            this.btn_ch_road.Text = "СТАРТУЕМ ЕПТА";
             this.btn_ch_road.UseVisualStyleBackColor = true;
             this.btn_ch_road.Click += new System.EventHandler(this.btn_ch_road_Click);
+            // 
+            // panel_user
+            // 
+            this.panel_user.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel_user.Location = new System.Drawing.Point(3, 3);
+            this.panel_user.Name = "panel_user";
+            this.panel_user.Size = new System.Drawing.Size(921, 463);
+            this.panel_user.TabIndex = 1;
             // 
             // tabPage2
             // 
@@ -181,15 +190,6 @@ namespace UNR_Crossroad
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 85.13238F));
             this.tableLayoutPanel2.Size = new System.Drawing.Size(831, 678);
             this.tableLayoutPanel2.TabIndex = 0;
-            // 
-            // panel_user
-            // 
-            this.panel_user.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel_user.Location = new System.Drawing.Point(3, 3);
-            this.panel_user.Name = "panel_user";
-            this.panel_user.Size = new System.Drawing.Size(921, 463);
-            this.panel_user.TabIndex = 1;
-            this.panel_user.Paint += new PaintEventHandler(Panel_Paint);
             // 
             // MainForm
             // 

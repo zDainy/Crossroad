@@ -14,5 +14,6 @@ namespace UNR_Crossroad.Core
         int Y { get; set; }
         int Speed { get; set; }
         Bitmap Sprite { get; set; }
+        Point Direct { get; set; }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data.Common;
 using System.Data.SQLite;
 using System.Drawing;
@@ -12,34 +13,18 @@ namespace UNR_Crossroad
     public partial class MainForm : Form
     {
         private User myUser;
-        //private Car c;
+        private List<IMovementMember> cars;
 
         public MainForm()
         {
             InitializeComponent();
-            //c = new Car(300, 300, 5, "img\\Car\\car1_blue.png");
+            panel_user.Paint += Engine.RenderMovement;
         }
 
 
         private void btn_ch_road_Click(object sender, EventArgs e)
         {
-            // Тест кнопка
-            //Timer move = new Timer {Interval = 1};
-            //move.Tick += (s, eee) => Mova_Tick();
-            //move.Start();
-        }
-
-        //public void Mova_Tick()
-        //{
-        //    c.Y -= 1;
-        //    panel_user.Invalidate();
-        //}
-        
-
-        protected void Panel_Paint(object sender, PaintEventArgs e)
-        {
-            //e.Graphics.DrawImage(c.Sprite, new Point(c.X, c.Y));
-            // Перерисовка
+            Engine.Start(panel_user);
         }
 
 

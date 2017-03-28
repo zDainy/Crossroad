@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace UNR_Crossroad.Core
 {
-    public static class Validation
+    public static class Validation 
     {
         private static string _user;
         private static string _pass;
@@ -26,28 +26,5 @@ namespace UNR_Crossroad.Core
             }
             return "OK";
         }
-
-        public static string EntranceCheck(string user, string pass)
-        {
-            if (user == _user)
-            {
-                if (pass == _pass)
-                {
-                    return "OK";
-                }
-                return "Неверный пароль";
-            }
-            return "Пользователь не найден";
-        }
-
-        public static string NameCheck(string user)
-        {
-            if (user == _user)
-            {
-                return "Пользователь с таким именем уже существует";
-            }
-            return "OK";
-        }
-
     }
 }

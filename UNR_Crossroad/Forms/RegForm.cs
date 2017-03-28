@@ -17,7 +17,6 @@ namespace UNR_Crossroad.Forms
 
         private void bt_enter_Click(object sender, EventArgs e)
         {
-            bool valid = true;
             if (Validation.EmptyCheck(tb_user.Text, tb_pass.Text) != "OK")
             {
                 lb_error.Text = Validation.EmptyCheck(tb_user.Text, tb_pass.Text);
@@ -25,18 +24,13 @@ namespace UNR_Crossroad.Forms
             else
             {
                 DbEngine.Connect();
-                foreach (var user in DbEngine.GetUsers())
+                if (DbEngine.LoginCheck(tb_user.Text))
                 {
-                    if (Validation.NameCheck(user.Key) != "OK")
-                    {
-                        lb_error.Text = Validation.NameCheck(user.Key);
-                        valid = false;
-                    }
+                    lb_error.Text = "Пользователь с таким именем уже существует";
                 }
-                if (valid)
+                else
                 {
-                    
-                    var r = MessageBox.Show(DbEngine.AddUser(tb_user.Text, tb_pass.Text, (int) (AccLevel) comboBox.SelectedItem),"", MessageBoxButtons.OK,MessageBoxIcon.Information);
+                    var r = MessageBox.Show(DbEngine.AddUser(tb_user.Text, tb_pass.Text, (int)(AccLevel)comboBox.SelectedItem), "", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     if (r == DialogResult.OK)
                     {
                         Close();

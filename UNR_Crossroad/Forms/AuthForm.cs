@@ -25,19 +25,16 @@ namespace UNR_Crossroad.Forms
             else
             {
                 DbEngine.Connect();
-                foreach (var user in DbEngine.GetUsers())
+                if (DbEngine.UserCheck(tb_user.Text, tb_pass.Text))
                 {
-                    if (Validation.EntranceCheck(user.Key, user.Value) == "OK")
-                    {
-                        User = new User(user.Key, user.Value, (AccLevel) DbEngine.GetAccLevel(user.Key));
-                        DbEngine.Close();
-                        DialogResult = DialogResult.OK;
-                        Close();
-                    }
-                    else
-                    {
-                        lb_error.Text = Validation.EntranceCheck(user.Key, user.Value);
-                    }
+                    User = new User(tb_user.Text, tb_pass.Text, (AccLevel)DbEngine.GetAccLevel(tb_user.Text));
+                    DbEngine.Close();
+                    DialogResult = DialogResult.OK;
+                    Close();
+                }
+                else
+                {
+                    lb_error.Text = "Неверный логин или пароль";
                 }
             }
         }
