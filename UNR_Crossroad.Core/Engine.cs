@@ -44,6 +44,96 @@ namespace UNR_Crossroad.Core
                 foreach (var m in Members)
                 {
                     e.Graphics.DrawImage(m.Sprite, new Point(m.X, m.Y));
+
+                    int verticalRoad_Left = 4;
+                    int verticalRoad_Right = 2;
+
+                    int horizontRoad_Up = 2;
+                    int horizontRoad_Down = 3;
+
+                    System.Drawing.Pen myPen = new System.Drawing.Pen(System.Drawing.Color.FromArgb(64, 64, 64), 1);
+
+                    Panel p = (Panel)sender;
+                    //Rectangle screenSize = p.Bounds;
+
+                    myPen.Width = verticalRoad_Left * 40;
+                    e.Graphics.DrawLine(myPen, p.Width / 2 - myPen.Width / 2, 0, p.Width / 2 - myPen.Width / 2, p.Height);
+                    myPen.Width = verticalRoad_Right * 40;
+                    e.Graphics.DrawLine(myPen, p.Width / 2 + myPen.Width / 2, 0, p.Width / 2 + myPen.Width / 2, p.Height);
+                    myPen.Width = horizontRoad_Up * 40;
+                    e.Graphics.DrawLine(myPen, 0, p.Height / 2 - myPen.Width / 2, p.Width, p.Height / 2 - myPen.Width / 2);
+                    myPen.Width = horizontRoad_Down * 40;
+                    e.Graphics.DrawLine(myPen, 0, p.Height / 2 + myPen.Width / 2, p.Width, p.Height / 2 + myPen.Width / 2);
+
+                    myPen.Color = Color.White;
+
+                    myPen.Width = 2;
+                    e.Graphics.DrawLine(myPen, p.Width / 2, 0, p.Width / 2, p.Height / 2 - horizontRoad_Up * 40); //12:00
+                    e.Graphics.DrawLine(myPen, p.Width / 2, p.Height / 2 + horizontRoad_Down * 40, p.Width / 2, p.Height); //6:00
+                    e.Graphics.DrawLine(myPen, 0, p.Height / 2, p.Width / 2 - verticalRoad_Left * 40, p.Height / 2); //9:00
+                    e.Graphics.DrawLine(myPen, p.Width / 2 + verticalRoad_Right * 40, p.Height / 2, p.Width, p.Height / 2);//3:00
+                    myPen.Width = 1;
+                    for (int i = 1; i < verticalRoad_Left; i++)
+                    {
+                        int penPosition_Up = p.Height / 2 - horizontRoad_Up * 40;
+                        int penPosition_Down = p.Height / 2 + horizontRoad_Down * 40;
+                        while (penPosition_Up > 0)
+                        {
+                            e.Graphics.DrawLine(myPen, p.Width / 2 - i * 40, penPosition_Up, p.Width / 2 - i * 40, penPosition_Up - 30); //12:00
+                            penPosition_Up = penPosition_Up - 50;
+                        }
+                        while (penPosition_Down < p.Height)
+                        {
+                            e.Graphics.DrawLine(myPen, p.Width / 2 - i * 40, penPosition_Down, p.Width / 2 - i * 40, penPosition_Down + 30); //9:00
+                            penPosition_Down = penPosition_Down + 50;
+                        }
+                    }
+
+                    for (int i = 1; i < verticalRoad_Right; i++)
+                    {
+                        int penPosition_Up = p.Height / 2 - horizontRoad_Up * 40;
+                        int penPosition_Down = p.Height / 2 + horizontRoad_Down * 40;
+                        while (penPosition_Up > 0)
+                        {
+                            e.Graphics.DrawLine(myPen, p.Width / 2 + i * 40, penPosition_Up, p.Width / 2 + i * 40, penPosition_Up - 30); //12:00
+                            penPosition_Up = penPosition_Up - 50;
+                        }
+                        while (penPosition_Down < p.Height)
+                        {
+                            e.Graphics.DrawLine(myPen, p.Width / 2 + i * 40, penPosition_Down, p.Width / 2 + i * 40, penPosition_Down + 30); //9:00
+                            penPosition_Down = penPosition_Down + 50;
+                        }
+                    }
+                    for (int i = 1; i < horizontRoad_Up; i++)
+                    {
+                        int penPosition_Left = p.Width / 2 - verticalRoad_Left * 40;
+                        int penPosition_Rihgt = p.Width / 2 + verticalRoad_Right * 40;
+                        while (penPosition_Left > 0)
+                        {
+                            e.Graphics.DrawLine(myPen, penPosition_Left, p.Height / 2 - i * 40, penPosition_Left - 30, p.Height / 2 - i * 40); //12:00
+                            penPosition_Left = penPosition_Left - 50;
+                        }
+                        while (penPosition_Rihgt < p.Width)
+                        {
+                            e.Graphics.DrawLine(myPen, penPosition_Rihgt, p.Height / 2 - i * 40, penPosition_Rihgt + 30, p.Height / 2 - i * 40); //9:00
+                            penPosition_Rihgt = penPosition_Rihgt + 50;
+                        }
+                    }
+                    for (int i = 1; i < horizontRoad_Down; i++)
+                    {
+                        int penPosition_Left = p.Width / 2 - verticalRoad_Left * 40;
+                        int penPosition_Rihgt = p.Width / 2 + verticalRoad_Right * 40;
+                        while (penPosition_Left > 0)
+                        {
+                            e.Graphics.DrawLine(myPen, penPosition_Left, p.Height / 2 + i * 40, penPosition_Left - 30, p.Height / 2 + i * 40); //12:00
+                            penPosition_Left = penPosition_Left - 50;
+                        }
+                        while (penPosition_Rihgt < p.Width)
+                        {
+                            e.Graphics.DrawLine(myPen, penPosition_Rihgt, p.Height / 2 + i * 40, penPosition_Rihgt + 30, p.Height / 2 + i * 40); //9:00
+                            penPosition_Rihgt = penPosition_Rihgt + 50;
+                        }
+                    }
                 }
             }
         }
