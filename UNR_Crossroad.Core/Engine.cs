@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Drawing;
+using System.Security.Cryptography.X509Certificates;
 using System.Windows.Forms;
 
 namespace UNR_Crossroad.Core
@@ -13,18 +14,24 @@ namespace UNR_Crossroad.Core
         public static List<IMovementMember> Members { get; set; }
         public static bool IsReady { get; set; }
         private static Random r;
+        private static Road _mainRoad;
+        private static Label lb;
+        public static Timer gen;
 
         public static void Start(Panel p)
         {
             IsReady = true;
+            _mainRoad = new Road(1, 1, 1, 1);
             Members = new List<IMovementMember>();
             r = new Random();
             Timer move = new Timer { Interval = 1 };
             move.Tick += (sender, e) => Move_Tick(p);
             move.Start();
-            Timer gen = new Timer { Interval = 1000 };
+            gen = new Timer { Interval = 100 };
             gen.Tick += (sender, e) => GenerateMembers_Tick(p);
             gen.Start();
+            lb = new Label {Location = new Point(0, 0)};
+            p.Controls.Add(lb);
         }
 
         public static void Move_Tick(Panel p)
@@ -33,141 +40,90 @@ namespace UNR_Crossroad.Core
             {
                 Members[i].Y += Members[i].Direct.Y * Members[i].Speed;
                 Members[i].X += Members[i].Direct.X * Members[i].Speed;
+                // Освобождение памяти
+                if (Members[i].X < 0 || Members[i].X > p.Width || Members[i].Y < 0 || Members[i].Y > p.Height)
+                {
+                    Members.RemoveAt(i);
+                }
             }
+            // Кол-во машин (левый верхний угол)
+            lb.Text = Members.Count.ToString();
             p.Invalidate();
         }
 
-        public static void RenderMovement(object sender, PaintEventArgs e)
+        public static void RenderMap(object sender, PaintEventArgs e)
         {
             if (IsReady)
             {
+                _mainRoad.RenderRoad(sender as Panel, e);
                 foreach (var m in Members)
                 {
                     e.Graphics.DrawImage(m.Sprite, new Point(m.X, m.Y));
-
-                    int verticalRoad_Left = 4;
-                    int verticalRoad_Right = 2;
-
-                    int horizontRoad_Up = 2;
-                    int horizontRoad_Down = 3;
-
-                    System.Drawing.Pen myPen = new System.Drawing.Pen(System.Drawing.Color.FromArgb(64, 64, 64), 1);
-
-                    Panel p = (Panel)sender;
-                    //Rectangle screenSize = p.Bounds;
-
-                    myPen.Width = verticalRoad_Left * 40;
-                    e.Graphics.DrawLine(myPen, p.Width / 2 - myPen.Width / 2, 0, p.Width / 2 - myPen.Width / 2, p.Height);
-                    myPen.Width = verticalRoad_Right * 40;
-                    e.Graphics.DrawLine(myPen, p.Width / 2 + myPen.Width / 2, 0, p.Width / 2 + myPen.Width / 2, p.Height);
-                    myPen.Width = horizontRoad_Up * 40;
-                    e.Graphics.DrawLine(myPen, 0, p.Height / 2 - myPen.Width / 2, p.Width, p.Height / 2 - myPen.Width / 2);
-                    myPen.Width = horizontRoad_Down * 40;
-                    e.Graphics.DrawLine(myPen, 0, p.Height / 2 + myPen.Width / 2, p.Width, p.Height / 2 + myPen.Width / 2);
-
-                    myPen.Color = Color.White;
-
-                    myPen.Width = 2;
-                    e.Graphics.DrawLine(myPen, p.Width / 2, 0, p.Width / 2, p.Height / 2 - horizontRoad_Up * 40); //12:00
-                    e.Graphics.DrawLine(myPen, p.Width / 2, p.Height / 2 + horizontRoad_Down * 40, p.Width / 2, p.Height); //6:00
-                    e.Graphics.DrawLine(myPen, 0, p.Height / 2, p.Width / 2 - verticalRoad_Left * 40, p.Height / 2); //9:00
-                    e.Graphics.DrawLine(myPen, p.Width / 2 + verticalRoad_Right * 40, p.Height / 2, p.Width, p.Height / 2);//3:00
-                    myPen.Width = 1;
-                    for (int i = 1; i < verticalRoad_Left; i++)
-                    {
-                        int penPosition_Up = p.Height / 2 - horizontRoad_Up * 40;
-                        int penPosition_Down = p.Height / 2 + horizontRoad_Down * 40;
-                        while (penPosition_Up > 0)
-                        {
-                            e.Graphics.DrawLine(myPen, p.Width / 2 - i * 40, penPosition_Up, p.Width / 2 - i * 40, penPosition_Up - 30); //12:00
-                            penPosition_Up = penPosition_Up - 50;
-                        }
-                        while (penPosition_Down < p.Height)
-                        {
-                            e.Graphics.DrawLine(myPen, p.Width / 2 - i * 40, penPosition_Down, p.Width / 2 - i * 40, penPosition_Down + 30); //9:00
-                            penPosition_Down = penPosition_Down + 50;
-                        }
-                    }
-
-                    for (int i = 1; i < verticalRoad_Right; i++)
-                    {
-                        int penPosition_Up = p.Height / 2 - horizontRoad_Up * 40;
-                        int penPosition_Down = p.Height / 2 + horizontRoad_Down * 40;
-                        while (penPosition_Up > 0)
-                        {
-                            e.Graphics.DrawLine(myPen, p.Width / 2 + i * 40, penPosition_Up, p.Width / 2 + i * 40, penPosition_Up - 30); //12:00
-                            penPosition_Up = penPosition_Up - 50;
-                        }
-                        while (penPosition_Down < p.Height)
-                        {
-                            e.Graphics.DrawLine(myPen, p.Width / 2 + i * 40, penPosition_Down, p.Width / 2 + i * 40, penPosition_Down + 30); //9:00
-                            penPosition_Down = penPosition_Down + 50;
-                        }
-                    }
-                    for (int i = 1; i < horizontRoad_Up; i++)
-                    {
-                        int penPosition_Left = p.Width / 2 - verticalRoad_Left * 40;
-                        int penPosition_Rihgt = p.Width / 2 + verticalRoad_Right * 40;
-                        while (penPosition_Left > 0)
-                        {
-                            e.Graphics.DrawLine(myPen, penPosition_Left, p.Height / 2 - i * 40, penPosition_Left - 30, p.Height / 2 - i * 40); //12:00
-                            penPosition_Left = penPosition_Left - 50;
-                        }
-                        while (penPosition_Rihgt < p.Width)
-                        {
-                            e.Graphics.DrawLine(myPen, penPosition_Rihgt, p.Height / 2 - i * 40, penPosition_Rihgt + 30, p.Height / 2 - i * 40); //9:00
-                            penPosition_Rihgt = penPosition_Rihgt + 50;
-                        }
-                    }
-                    for (int i = 1; i < horizontRoad_Down; i++)
-                    {
-                        int penPosition_Left = p.Width / 2 - verticalRoad_Left * 40;
-                        int penPosition_Rihgt = p.Width / 2 + verticalRoad_Right * 40;
-                        while (penPosition_Left > 0)
-                        {
-                            e.Graphics.DrawLine(myPen, penPosition_Left, p.Height / 2 + i * 40, penPosition_Left - 30, p.Height / 2 + i * 40); //12:00
-                            penPosition_Left = penPosition_Left - 50;
-                        }
-                        while (penPosition_Rihgt < p.Width)
-                        {
-                            e.Graphics.DrawLine(myPen, penPosition_Rihgt, p.Height / 2 + i * 40, penPosition_Rihgt + 30, p.Height / 2 + i * 40); //9:00
-                            penPosition_Rihgt = penPosition_Rihgt + 50;
-                        }
-                    }
                 }
             }
         }
 
         // Тестовый
-        // Илюх разберись
         public static void GenerateMembers_Tick(Panel p)
         {
-            Point dirX = new Point(r.Next(-1, 2), 0);
-            while (dirX.X == 0)
+            switch (r.Next(1, 5))
             {
-                dirX.X = r.Next(-1, 2);
+                case 1:
+                    GenVerticalLeftCar(p);
+                    break;
+                case 2:
+                    GenVerticalRightCar(p);
+                    break;
+                case 3:
+                    GenHorizontalUpCar(p);
+                    break;
+                case 4:
+                    GenHorizontalDownCar(p);
+                    break;
             }
-            Point dirY = new Point(0, r.Next(-1, 2));
-            while (dirY.Y == 0)
+        }
+
+        public static void GenVerticalRightCar(Panel p)
+        {
+            Bitmap bm = new Bitmap(Image.FromFile("img\\Car\\car1_blue.png"), 28, 50);
+            int newR = r.Next(0, _mainRoad.VerticalRoadRight);
+            if (!Members.Exists(c => c.X == p.Width/2 + 6 + newR*40 && c.Y + 55 >= p.Height))
             {
-                dirY.Y = r.Next(-1, 2);
+                Members.Add(new Car(p.Width / 2 + 6 + newR * 40, p.Height, 3, bm, new Point(0, -1)));
             }
-            Car cY = new Car(r.Next(10,p.Width-10), r.Next(10, p.Height - 10), r.Next(1, 5), "img\\Car\\car1_blue.png", dirY);
-            Car cX = new Car(r.Next(10, p.Width - 10), r.Next(10, p.Height - 10), r.Next(1, 5), "img\\Car\\car1_blue.png", dirX);
-            if (dirY.Y != -1)
+        }
+
+        public static void GenVerticalLeftCar(Panel p)
+        {
+            Bitmap bm = new Bitmap(Image.FromFile("img\\Car\\car1_blue.png"), 28, 50);
+            bm.RotateFlip(RotateFlipType.Rotate180FlipNone);
+            int newR = r.Next(0, _mainRoad.VerticalRoadLeft);
+            if (!Members.Exists(c => c.X == p.Width / 2 - 34 - newR * 40 && c.Y - 55 <= 0))
             {
-                cY.Sprite.RotateFlip(RotateFlipType.Rotate180FlipNone);
+                Members.Add(new Car(p.Width / 2 - 34 - newR * 40, 0, 3, bm, new Point(0, 1)));
             }
-            Members.Add(cY);
-            if (dirX.X == 1)
+        }
+
+        public static void GenHorizontalUpCar(Panel p)
+        {
+            Bitmap bm = new Bitmap(Image.FromFile("img\\Car\\car1_blue.png"), 28, 50);
+            bm.RotateFlip(RotateFlipType.Rotate270FlipNone);
+            int newR = r.Next(0, _mainRoad.HorizontRoadUp);
+            if (!Members.Exists(c => c.Y == p.Height/2 - 34 - newR*40 && c.X + 55 >= p.Width))
             {
-                cX.Sprite.RotateFlip(RotateFlipType.Rotate90FlipNone);
+                Members.Add(new Car(p.Width, p.Height / 2 - 34 - newR * 40, 3, bm, new Point(-1, 0)));
             }
-            if (dirX.X == -1)
+        }
+
+        public static void GenHorizontalDownCar(Panel p)
+        {
+            Bitmap bm = new Bitmap(Image.FromFile("img\\Car\\car1_blue.png"), 28, 50);
+            bm.RotateFlip(RotateFlipType.Rotate90FlipNone);
+            int newR = r.Next(0, _mainRoad.HorizontRoadDown);
+            if (!Members.Exists(c => c.Y == p.Height / 2 + 6 + newR * 40 && c.X - 55 <= 0))
             {
-                cX.Sprite.RotateFlip(RotateFlipType.Rotate270FlipNone);
+                Members.Add(new Car(0, p.Height / 2 + 6 + newR*40, 3, bm, new Point(1, 0)));
             }
-            Members.Add(cX);
         }
     }
 }

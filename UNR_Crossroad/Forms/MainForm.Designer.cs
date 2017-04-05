@@ -41,9 +41,11 @@ namespace UNR_Crossroad
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.panel_user_dop = new System.Windows.Forms.Panel();
             this.btn_ch_road = new System.Windows.Forms.Button();
-            this.panel_user = new UNR_Crossroad.BufferedPanel();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
+            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.button1 = new System.Windows.Forms.Button();
+            this.panel_user = new UNR_Crossroad.BufferedPanel();
             this.menuStrip1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -137,6 +139,8 @@ namespace UNR_Crossroad
             // panel_user_dop
             // 
             this.panel_user_dop.BackColor = System.Drawing.Color.PapayaWhip;
+            this.panel_user_dop.Controls.Add(this.button1);
+            this.panel_user_dop.Controls.Add(this.textBox1);
             this.panel_user_dop.Controls.Add(this.btn_ch_road);
             this.panel_user_dop.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel_user_dop.Location = new System.Drawing.Point(930, 6);
@@ -156,14 +160,6 @@ namespace UNR_Crossroad
             this.btn_ch_road.Text = "СТАРТУЕМ ЕПТА";
             this.btn_ch_road.UseVisualStyleBackColor = true;
             this.btn_ch_road.Click += new System.EventHandler(this.btn_ch_road_Click);
-            // 
-            // panel_user
-            // 
-            this.panel_user.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel_user.Location = new System.Drawing.Point(3, 3);
-            this.panel_user.Name = "panel_user";
-            this.panel_user.Size = new System.Drawing.Size(921, 463);
-            this.panel_user.TabIndex = 1;
             // 
             // tabPage2
             // 
@@ -191,6 +187,34 @@ namespace UNR_Crossroad
             this.tableLayoutPanel2.Size = new System.Drawing.Size(831, 678);
             this.tableLayoutPanel2.TabIndex = 0;
             // 
+            // textBox1
+            // 
+            this.textBox1.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.textBox1.Location = new System.Drawing.Point(0, 434);
+            this.textBox1.Name = "textBox1";
+            this.textBox1.Size = new System.Drawing.Size(180, 23);
+            this.textBox1.TabIndex = 2;
+            // 
+            // button1
+            // 
+            this.button1.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.button1.Location = new System.Drawing.Point(0, 352);
+            this.button1.Margin = new System.Windows.Forms.Padding(3, 6, 3, 6);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(180, 82);
+            this.button1.TabIndex = 3;
+            this.button1.Text = "ДОБАВЬ СКОРОСТИ ЕПТА";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click_1);
+            // 
+            // panel_user
+            // 
+            this.panel_user.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel_user.Location = new System.Drawing.Point(3, 3);
+            this.panel_user.Name = "panel_user";
+            this.panel_user.Size = new System.Drawing.Size(921, 463);
+            this.panel_user.TabIndex = 1;
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 16F);
@@ -211,6 +235,7 @@ namespace UNR_Crossroad
             this.tabPage1.ResumeLayout(false);
             this.tableLayoutPanel1.ResumeLayout(false);
             this.panel_user_dop.ResumeLayout(false);
+            this.panel_user_dop.PerformLayout();
             this.tabPage2.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -231,5 +256,7 @@ namespace UNR_Crossroad
         private ToolStripMenuItem регистрацияToolStripMenuItem;
         private ToolStripMenuItem выНеВошлиToolStripMenuItem;
         private BufferedPanel panel_user;
+        private TextBox textBox1;
+        private Button button1;
     }
 }

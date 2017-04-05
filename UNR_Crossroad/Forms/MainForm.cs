@@ -13,12 +13,11 @@ namespace UNR_Crossroad
     public partial class MainForm : Form
     {
         private User myUser;
-        private List<IMovementMember> cars;
 
         public MainForm()
         {
             InitializeComponent();
-            panel_user.Paint += Engine.RenderMovement;
+            panel_user.Paint += Engine.RenderMap;
         }
 
 
@@ -43,6 +42,11 @@ namespace UNR_Crossroad
             new RegForm().ShowDialog();
         }
         #endregion
+        
 
+        private void button1_Click_1(object sender, EventArgs e)
+        {
+            Engine.gen.Interval = Convert.ToInt32(textBox1.Text);
+        }
     }
 }

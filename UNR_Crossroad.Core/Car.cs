@@ -15,12 +15,12 @@ namespace UNR_Crossroad.Core
         public Bitmap Sprite { get; set; }
         public Point Direct { get; set; }
 
-        public Car(int x, int y, int speed,string sprite,Point dir)
+        public Car(int x, int y, int speed,Bitmap sprite,Point dir)
         {
             X = x;
             Y = y;
             Speed = speed;
-            Sprite = new Bitmap(Image.FromFile(sprite));
+            Sprite = sprite;
             Direct = dir;
         }
     }
