@@ -13,15 +13,17 @@ namespace UNR_Crossroad.Core
         public int Y { get; set; }
         public int Speed { get; set; }
         public Bitmap Sprite { get; set; }
-        public Point Direct { get; set; }
+        public Vector Direct { get; set; }
+        public int SomeTt { get; set; }
 
-        public Car(int x, int y, int speed,Bitmap sprite,Point dir)
+        public Car(int x, int y, int speed,Bitmap sprite,Vector dir,int som)
         {
             X = x;
             Y = y;
             Speed = speed;
             Sprite = sprite;
             Direct = dir;
+            SomeTt = som;
         }
     }
 }
