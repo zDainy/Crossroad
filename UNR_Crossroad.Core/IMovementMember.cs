@@ -15,6 +15,16 @@ namespace UNR_Crossroad.Core
         int Speed { get; set; }
         Bitmap Sprite { get; set; }
         Vector Direct { get; set; }
-        int SomeTt { get; set; }
+        
+    }
+
+    public enum Doroga
+    {
+        Right, Left, Up, Down
+    }
+
+    public enum Porovot
+    {
+        Right, Left, No
     }
 }

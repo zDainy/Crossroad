@@ -14,72 +14,131 @@ namespace UNR_Crossroad.Core
 {
     public static class Engine
     {
-        public static List<IMovementMember> Members { get; set; }
+        public static List<Car> Members { get; set; }
         public static bool IsReady { get; set; }
+        public static List<Car> Deleter { get; set; }
         private static Random r;
         private static Road _mainRoad;
         private static Label lb;
         public static Timer gen;
 
-        private static Label lbOption;
-
         public static void Start(Panel p)
         {
             IsReady = true;
-            _mainRoad = new Road(3, 4, 4, 4);
-            Members = new List<IMovementMember>();
+            _mainRoad = new Road(4, 4, 2, 2);
+            Members = new List<Car>();
+            Deleter = new List<Car>();
             r = new Random();
-            //
-            //
-            Members.Add(new Car(p.Width/2 - 8+40, p.Height-350, 3, new Bitmap(Image.FromFile("img\\Car\\car1_blue.png")), new Vector(0, -1),2));  // Для теста
-            Members.Add(new Car(p.Width / 2 - 8, p.Height - 50, 3, new Bitmap(Image.FromFile("img\\Car\\car1_blue.png")), new Vector(0, -1),1));  // Для теста
-            Members.Add(new Car(p.Width / 2 - 8+80, p.Height - 150, 3, new Bitmap(Image.FromFile("img\\Car\\car1_blue.png")), new Vector(0, -1), 3));  // Для теста
-            Members.Add(new Car(p.Width / 2 - 8 + 120, p.Height - 250, 3, new Bitmap(Image.FromFile("img\\Car\\car1_blue.png")), new Vector(0, -1), 4));  // Для теста
-
-
-            lbOption = new Label {Location = new Point(700, 550)};
-            //
-            //
-            Timer move = new Timer { Interval = 10};
+            Helper.SetDefaultSprite();
+            Timer move = new Timer { Interval = 10 };
             move.Tick += (sender, e) => Move_Tick(p);
             move.Start();
             gen = new Timer { Interval = 100 };
             gen.Tick += (sender, e) => GenerateMembers_Tick(p);
             gen.Start();
-            lb = new Label {Location = new Point(0, 0)};
+            lb = new Label { Location = new Point(0, 0) };
             p.Controls.Add(lb);
-            p.Controls.Add(lbOption);
         }
 
         public static void Move_Tick(Panel p)
         {
             foreach (var m in Members)
             {
-                if (m.X <= p.Width/2 + 200 && m.X >= p.Width/2 - 126 && m.Y >= p.Height/2 - 86 &&
-                    m.Y <= p.Height/2 + 40*m.SomeTt)
+                if (m.Povorot != Porovot.No)
                 {
-                    m.Speed = 1;
-                    Povorot((Car) m, p);
+                    int t = m.Polosa;
+                    if (_mainRoad.HorizontRoadDown < _mainRoad.VerticalRoadRight && m.Polosa >= _mainRoad.VerticalRoadRight + (_mainRoad.HorizontRoadDown - _mainRoad.VerticalRoadRight) + 1)
+                    {
+                        t = _mainRoad.HorizontRoadDown;
+                    }
+                    switch (m.Doroga)
+                    {
+                        case Doroga.Right:
+                            if (m.X <= p.Width / 2 + 40 * m.Polosa && m.X >= p.Width / 2 - 40 * m.Polosa - 6 && m.Y >= p.Height / 2 - 40 * m.Polosa - 6 &&
+                            m.Y <= p.Height / 2 + 40 * t)
+                            {
+                                m.Speed = 1;
+                                PovorotR(m, p);
+                            }
+                            break;
+                        case Doroga.Down:
+                            if (m.X <= p.Width / 2 + 40 * t && m.X >= p.Width / 2 - 40 * (t + 1) - 17 && m.Y >= p.Height / 2 - 40 * m.Polosa - 6 &&
+                            m.Y <= p.Height / 2 + 40 * t)
+                            {
+                                m.Speed = 1;
+                                PovorotD(m, p);
+                            }
+                            break;
+                    }
                 }
-                Move((Car) m);
+
+                Move(m);
+                if (m.X < 0 || m.X > p.Width || m.Y < 0 || m.Y > p.Height)
+                 {
+                     Deleter.Add(m);
+                 }
+            }
+            if (Deleter.Count != 0)
+            {
+                foreach (var c in Deleter)
+                {
+                    Members.Remove(c);
+                }
             }
             // Кол-во машин (левый верхний угол)
             lb.Text = Members.Count.ToString();
             p.Invalidate();
         }
 
-        public static void Povorot(Car c, Panel p)
+
+        // Создать класс Поворот
+        public static void PovorotD(Car c, Panel p)
         {
-            c.Direct = new Vector(c.Direct.X + 0.12 , c.Direct.Y - 0.007);
-            c.Y += (int) c.Direct.Y*c.Speed;
-            c.X += (int) c.Direct.X*c.Speed;
-            c.Sprite = RotateImage(c.Sprite, 4);
-            if (PovorotEndCheck(c, p.Width/2 + 40*(c.SomeTt)))
+            // c.Direct = new Vector(c.Direct.X + 0.12*tmp , c.Direct.Y - 0.007*tmp);
+            c.Direct = new Vector(c.Direct.X + 0.007, c.Direct.Y + 0.12);
+            c.Y += (int)c.Direct.Y * c.Speed;
+            c.X += (int)c.Direct.X * c.Speed;
+            //if (!PovorotEndCheck(c, p.Width/2 + 40*(c.Polosa)-2))
+            //{
+            //    c.Sprite = RotateImage(c.Sprite, 3);                
+            //}
+
+            if (!(c.Y >= p.Height / 2 + 40 * (c.Polosa) - 2))
             {
+                c.Sprite = RotateImage(c.Sprite, 3);
+            }
+            else
+            {
+                c.Speed = 3;
+                //  c.Direct = new Vector(1, 0);
+                c.Direct = new Vector(0, 1);
+                //  c.Sprite = Helper.DefaultSpriteRight;
+                c.Sprite = Helper.DefaultSpriteDown;
+            }
+        }
+
+        public static void PovorotR(Car c, Panel p)
+        {
+            c.Direct = new Vector(c.Direct.X + 0.12, c.Direct.Y - 0.007);
+            //  c.Direct = new Vector(c.Direct.X + 0.007, c.Direct.Y + 0.12);
+            c.Y += (int)c.Direct.Y * c.Speed;
+            c.X += (int)c.Direct.X * c.Speed;
+            if (!(c.X >= p.Width / 2 + 40 * (c.Polosa) - 2))
+            {
+                c.Sprite = RotateImage(c.Sprite, 3);
+            }
+
+            //if (!PovorotEndCheck(c, p.Height / 2 + 40 * (c.Polosa) - 2))
+            //{
+            //    c.Sprite = RotateImage(c.Sprite, 3);
+            //}
+            else
+            {
+                c.Speed = 3;
                 c.Direct = new Vector(1, 0);
-                Bitmap bm = new Bitmap(Image.FromFile("img\\Car\\car1_blue.png"));
-                bm.RotateFlip(RotateFlipType.Rotate90FlipNone);
-                c.Sprite = bm;
+                //c.Direct = new Vector(0, 1);
+                c.Sprite = Helper.DefaultSpriteRight;
+                //c.Sprite = Helper.DefaultSpriteDown;
             }
         }
 
@@ -92,11 +151,6 @@ namespace UNR_Crossroad.Core
             g.TranslateTransform(-(float)input.Width / 2, -(float)input.Height / 2);
             g.DrawImage(input, new Point(0, 0));
             return result;
-        }
-
-        public static bool PovorotEndCheck(Car c, int g)
-        {
-            return c.X >= g;
         }
 
         public static void Move(Car c)
@@ -143,7 +197,7 @@ namespace UNR_Crossroad.Core
             int newR = r.Next(0, _mainRoad.VerticalRoadRight);
             if (!Members.Exists(c => c.X == p.Width / 2 - 8 + newR * 40 && c.Y + 55 >= p.Height))
             {
-                Members.Add(new Car(p.Width / 2 - 8 + newR * 40, p.Height, 3, bm, new Vector(0, -1),newR+1));
+                Members.Add(new Car(p.Width / 2 - 8 + newR * 40, p.Height, 3, bm, new Vector(0, -1), newR + 1, Doroga.Right, Porovot.Right));
             }
         }
 
@@ -154,7 +208,7 @@ namespace UNR_Crossroad.Core
             int newR = r.Next(0, _mainRoad.VerticalRoadLeft);
             if (!Members.Exists(c => c.X == p.Width / 2 - 34 - newR * 40 && c.Y - 55 <= 0))
             {
-                Members.Add(new Car(p.Width / 2 - 50 - newR * 40, 0, 3, bm, new Vector(0, 1), newR + 1));
+                Members.Add(new Car(p.Width / 2 - 50 - newR * 40, 0, 3, bm, new Vector(0, 1), newR + 1, Doroga.Left, Porovot.No));
             }
         }
 
@@ -165,7 +219,7 @@ namespace UNR_Crossroad.Core
             int newR = r.Next(0, _mainRoad.HorizontRoadUp);
             if (!Members.Exists(c => c.Y == p.Height / 2 - 34 - newR * 40 && c.X + 55 >= p.Width))
             {
-                Members.Add(new Car(p.Width, p.Height / 2 - 50 - newR * 40, 3, bm, new Vector(-1, 0), newR + 1));
+                Members.Add(new Car(p.Width, p.Height / 2 - 50 - newR * 40, 3, bm, new Vector(-1, 0), newR + 1, Doroga.Up, Porovot.No));
             }
         }
 
@@ -176,7 +230,7 @@ namespace UNR_Crossroad.Core
             int newR = r.Next(0, _mainRoad.HorizontRoadDown);
             if (!Members.Exists(c => c.Y == p.Height / 2 + 6 + newR * 40 && c.X - 55 <= 0))
             {
-                Members.Add(new Car(0, p.Height / 2 - 8 + newR * 40, 3, bm, new Vector(1, 0), newR + 1));
+                Members.Add(new Car(0, p.Height / 2 - 8 + newR * 40, 3, bm, new Vector(1, 0), newR + 1, Doroga.Down, Porovot.Right));
             }
         }
     }

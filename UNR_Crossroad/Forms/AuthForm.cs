@@ -18,9 +18,9 @@ namespace UNR_Crossroad.Forms
 
         private void Bt_enter_Click(object sender, EventArgs e)
         {
-            if (Validation.EmptyCheck(tb_user.Text,tb_pass.Text) != "OK")
+            if (Helper.EmptyCheck(tb_user.Text,tb_pass.Text) != "OK")
             {
-                lb_error.Text = Validation.EmptyCheck(tb_user.Text, tb_pass.Text);
+                lb_error.Text = Helper.EmptyCheck(tb_user.Text, tb_pass.Text);
             }
             else
             {
