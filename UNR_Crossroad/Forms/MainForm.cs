@@ -1,14 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Data.Common;
-using System.Data.SQLite;
-using System.Drawing;
-using System.IO;
 using System.Windows.Forms;
 using UNR_Crossroad.Core;
-using UNR_Crossroad.Forms;
 
-namespace UNR_Crossroad
+namespace UNR_Crossroad.Forms
 {
     public partial class MainForm : Form
     {
@@ -18,12 +12,28 @@ namespace UNR_Crossroad
         {
             InitializeComponent();
             panel_user.Paint += Engine.RenderMap;
+            Engine.Initialization();
+            Engine.IsReady = true;
+            Engine.UserPanel = panel_user;
+            Engine.CarCount = tbAll;
+            Engine.CurrentlyCarCount = tbCur;
+            Engine.WorkTime = tbTime;
+            Engine.Cpm = tbCpm;
         }
 
 
         private void btn_ch_road_Click(object sender, EventArgs e)
         {
-            Engine.Start(panel_user);
+            Engine.Start();
+        }
+
+        private void btn_stop_Click(object sender, EventArgs e)
+        {
+            Engine.Pause();
+        }
+        private void button1_Click(object sender, EventArgs e)
+        {
+            Engine.Stop();
         }
 
 
@@ -35,6 +45,7 @@ namespace UNR_Crossroad
             {
                 myUser = auth.GetUser();
                 выНеВошлиToolStripMenuItem.Text = "Вы вошли как " + myUser.Level;
+                labelUserAuth.Text = "Вы вошли как " + myUser.Level;
             }
         }
         private void регистрацияToolStripMenuItem_Click(object sender, EventArgs e)
@@ -43,10 +54,5 @@ namespace UNR_Crossroad
         }
         #endregion
         
-
-        private void button1_Click_1(object sender, EventArgs e)
-        {
-            Engine.gen.Interval = Convert.ToInt32(textBox1.Text);
-        }
     }
 }

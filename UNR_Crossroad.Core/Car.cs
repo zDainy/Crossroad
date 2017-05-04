@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Drawing;
+﻿using System.Drawing;
 
 namespace UNR_Crossroad.Core
 {
@@ -13,12 +8,15 @@ namespace UNR_Crossroad.Core
         public int Y { get; set; }
         public int Speed { get; set; }
         public Bitmap Sprite { get; set; }
+        public int NSprite { get; set; }
         public Vector Direct { get; set; }
         public int Polosa { get; set; }
-        public Doroga Doroga { get; set; }
-        public Porovot Povorot { get; set; }
+        public int StartRoadCount { get; set; }
+        public int FinishRoadCount { get; set; }
+        public CRoad StartRoad { get; set; }
+        public CTurn Turn { get; set; }
 
-        public Car(int x, int y, int speed, Bitmap sprite, Vector dir, int polosa, Doroga dor, Porovot pov)
+        public Car(int x, int y, int speed, Bitmap sprite,int nspr, Vector dir, int polosa, int src, int frc, CRoad cr,CTurn ct)
         {
             X = x;
             Y = y;
@@ -26,8 +24,11 @@ namespace UNR_Crossroad.Core
             Sprite = sprite;
             Direct = dir;
             Polosa = polosa;
-            Doroga = dor;
-            Povorot = pov;
+            StartRoadCount = src;
+            FinishRoadCount = frc;
+            StartRoad = cr;
+            Turn = ct;
+            NSprite = nspr;
         }
     }
 }

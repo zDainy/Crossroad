@@ -18,9 +18,9 @@ namespace UNR_Crossroad.Forms
 
         private void Bt_enter_Click(object sender, EventArgs e)
         {
-            if (Helper.EmptyCheck(tb_user.Text,tb_pass.Text) != "OK")
+            if (EmptyCheck(tb_user.Text,tb_pass.Text) != "OK")
             {
-                lb_error.Text = Helper.EmptyCheck(tb_user.Text, tb_pass.Text);
+                lb_error.Text = EmptyCheck(tb_user.Text, tb_pass.Text);
             }
             else
             {
@@ -42,6 +42,19 @@ namespace UNR_Crossroad.Forms
         public User GetUser()
         {
             return User;
+        }
+
+        public static string EmptyCheck(string user, string pass)
+        {
+            if (user == "")
+            {
+                return "Пустое имя пользователя";
+            }
+            if (pass == "")
+            {
+                return "Пустой пароль";
+            }
+            return "OK";
         }
 
         private void Tb_KeyPress(object sender, KeyPressEventArgs e)

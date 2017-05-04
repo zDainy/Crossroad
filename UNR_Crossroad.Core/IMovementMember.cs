@@ -18,12 +18,12 @@ namespace UNR_Crossroad.Core
         
     }
 
-    public enum Doroga
+    public enum CRoad
     {
         Right, Left, Up, Down
     }
 
-    public enum Porovot
+    public enum CTurn
     {
         Right, Left, No
     }

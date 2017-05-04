@@ -1,4 +1,4 @@
-﻿namespace UNR_Crossroad
+﻿namespace UNR_Crossroad.Forms
 {
     partial class SplashScreen
     {
@@ -29,20 +29,21 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SplashScreen));
-            this.lbClose = new System.Windows.Forms.Label();
+            this.lbLoad = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
-            // lbClose
+            // lbLoad
             // 
-            this.lbClose.AutoSize = true;
-            this.lbClose.BackColor = System.Drawing.Color.Transparent;
-            this.lbClose.ForeColor = System.Drawing.Color.Silver;
-            this.lbClose.Location = new System.Drawing.Point(1034, 9);
-            this.lbClose.Name = "lbClose";
-            this.lbClose.Size = new System.Drawing.Size(14, 13);
-            this.lbClose.TabIndex = 0;
-            this.lbClose.Text = "X";
-            this.lbClose.Click += new System.EventHandler(this.lbClose_Click);
+            this.lbLoad.BackColor = System.Drawing.Color.Transparent;
+            this.lbLoad.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.lbLoad.Font = new System.Drawing.Font("Calisto MT", 12F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbLoad.ForeColor = System.Drawing.SystemColors.GradientInactiveCaption;
+            this.lbLoad.Location = new System.Drawing.Point(0, 291);
+            this.lbLoad.Name = "lbLoad";
+            this.lbLoad.Size = new System.Drawing.Size(1060, 305);
+            this.lbLoad.TabIndex = 1;
+            this.lbLoad.Text = "Start loading...";
+            this.lbLoad.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // SplashScreen
             // 
@@ -51,7 +52,7 @@
             this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ClientSize = new System.Drawing.Size(1060, 596);
-            this.Controls.Add(this.lbClose);
+            this.Controls.Add(this.lbLoad);
             this.DoubleBuffered = true;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Name = "SplashScreen";
@@ -60,12 +61,11 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "SplashScreen";
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
         #endregion
-
-        private System.Windows.Forms.Label lbClose;
+        
+        private System.Windows.Forms.Label lbLoad;
     }
 }

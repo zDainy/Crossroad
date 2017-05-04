@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Drawing;
+using System.Threading;
 using System.Windows.Forms;
+using UNR_Crossroad.Core;
+using Timer = System.Windows.Forms.Timer;
 
-namespace UNR_Crossroad
+namespace UNR_Crossroad.Forms
 {
     public partial class SplashScreen : Form
     {
@@ -13,7 +16,7 @@ namespace UNR_Crossroad
         {
             InitializeComponent();
             Timer openTimer = new Timer { Interval = 1 };
-            Timer waiTimer = new Timer { Interval = 6000 };
+            Timer waiTimer = new Timer { Interval = 500 };
             Timer closeTimer = new Timer { Interval = 1 };
             Opacity = 0;
 
@@ -22,15 +25,21 @@ namespace UNR_Crossroad
             {
                 if (Math.Abs((Opacity += 0.03) - 1) <= 0.01)
                 {
-
                     Opacity = 1;
                     openTimer.Stop();
+                    new Thread(() => CarSprite.LoadCarSpriteLib(lbLoad)).Start();
                 }
             };
             openTimer.Start();
 
             // Ожидание 6 сек.
-            waiTimer.Tick += (sender, e) => closeTimer.Start(); 
+            waiTimer.Tick += (sender, e) =>
+            {
+                if (CarSprite.IsDone)
+                {
+                    closeTimer.Start();
+                }
+            }; 
             waiTimer.Start();
 
             // Плавоне исчезновение
@@ -45,7 +54,7 @@ namespace UNR_Crossroad
 
             AnimateImage();
         }
-       
+
 
         // Метод начинает анимацию
         private void AnimateImage()
@@ -74,11 +83,6 @@ namespace UNR_Crossroad
 
             //Рисуем следующий фрейм
             e.Graphics.DrawImage(_loadImg, new Point(450, 500));
-        }
-
-        private void lbClose_Click(object sender, EventArgs e)
-        {
-            Application.Exit();
         }
     }
 }

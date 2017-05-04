@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Drawing;
-using System.Drawing.Drawing2D;
-using System.Runtime.CompilerServices;
+using System.Globalization;
+using System.Runtime.Remoting.Channels;
 using System.Threading;
 using System.Windows.Forms;
 using Timer = System.Windows.Forms.Timer;
@@ -14,144 +11,106 @@ namespace UNR_Crossroad.Core
 {
     public static class Engine
     {
-        public static List<Car> Members { get; set; }
+        public static List<Car> Cars { get; set; }
         public static bool IsReady { get; set; }
         public static List<Car> Deleter { get; set; }
-        private static Random r;
-        private static Road _mainRoad;
-        private static Label lb;
-        public static Timer gen;
+        public static Random R { get; set; }
+        public static Road CurrentRoad { get; set; }
+        public static Timer GenTimer { get; set; }
+        public static Timer MoveTimer { get; set; }
+        public static Timer WorkTimer { get; set; }
+        public static Panel UserPanel { get; set; }
+        public static RightTurn RightTurn { get; set; }
+        public static LeftTurn LeftTurn { get; set; }
+        public static TextBox CarCount { get; set; }
+        public static TextBox CurrentlyCarCount { get; set; }
+        public static TextBox WorkTime { get; set; }
+        public static TextBox Cpm { get; set; }
+        public static int WorkTm { get; set; }
+        
 
-        public static void Start(Panel p)
+        public static void Start()
         {
-            IsReady = true;
-            _mainRoad = new Road(4, 4, 2, 2);
-            Members = new List<Car>();
-            Deleter = new List<Car>();
-            r = new Random();
-            Helper.SetDefaultSprite();
-            Timer move = new Timer { Interval = 10 };
-            move.Tick += (sender, e) => Move_Tick(p);
-            move.Start();
-            gen = new Timer { Interval = 100 };
-            gen.Tick += (sender, e) => GenerateMembers_Tick(p);
-            gen.Start();
-            lb = new Label { Location = new Point(0, 0) };
-            p.Controls.Add(lb);
+            MoveTimer.Start();
+            GenTimer.Start();
+            WorkTimer.Start();
         }
 
-        public static void Move_Tick(Panel p)
+        public static void Pause()
         {
-            foreach (var m in Members)
+            MoveTimer.Stop();
+            GenTimer.Stop();
+            WorkTimer.Stop();
+        }
+        public static void Stop()
+        {
+            Cars.Clear();
+            Deleter.Clear();
+            MoveTimer.Stop();
+            GenTimer.Stop();
+            WorkTimer.Stop();
+            CarCount.Text= "0";
+            CurrentlyCarCount.Text = "0";
+            WorkTime.Text = "0 c";
+            Cpm.Text = "0";
+            WorkTm = 0;
+            UserPanel.ResetBackColor();
+            UserPanel.Invalidate();
+        }
+
+        public static void Initialization()
+        {
+            CurrentRoad = new Road(4, 4, 4, 4);
+            Cars = new List<Car>();
+            Deleter = new List<Car>();
+            R = new Random();
+            RightTurn = new RightTurn();
+            LeftTurn = new LeftTurn();
+            MoveTimer = new Timer { Interval = 10 };
+            MoveTimer.Tick += (sender, e) => Move_Tick();
+            GenTimer = new Timer { Interval = 100 };
+            GenTimer.Tick += (sender, e) => GenerateMembers_Tick();
+            WorkTimer = new Timer {Interval = 1000};
+            WorkTimer.Tick += (sender, e) => Work_tick();
+        }
+
+        public static void Work_tick()
+        {
+            WorkTm++;
+            WorkTime.Text = WorkTm + " c";
+            Cpm.Text = Math.Round(Convert.ToDouble(CarCount.Text) * (60/ (double)WorkTm)).ToString(CultureInfo.InvariantCulture);
+        }
+
+        public static void Move_Tick()
+        {
+            CurrentlyCarCount.Text = Cars.Count.ToString();
+            foreach (var c in Cars)
             {
-                if (m.Povorot != Porovot.No)
+                if (c.Turn == CTurn.Right)
                 {
-                    int t = m.Polosa;
-                    if (_mainRoad.HorizontRoadDown < _mainRoad.VerticalRoadRight && m.Polosa >= _mainRoad.VerticalRoadRight + (_mainRoad.HorizontRoadDown - _mainRoad.VerticalRoadRight) + 1)
-                    {
-                        t = _mainRoad.HorizontRoadDown;
-                    }
-                    switch (m.Doroga)
-                    {
-                        case Doroga.Right:
-                            if (m.X <= p.Width / 2 + 40 * m.Polosa && m.X >= p.Width / 2 - 40 * m.Polosa - 6 && m.Y >= p.Height / 2 - 40 * m.Polosa - 6 &&
-                            m.Y <= p.Height / 2 + 40 * t)
-                            {
-                                m.Speed = 1;
-                                PovorotR(m, p);
-                            }
-                            break;
-                        case Doroga.Down:
-                            if (m.X <= p.Width / 2 + 40 * t && m.X >= p.Width / 2 - 40 * (t + 1) - 17 && m.Y >= p.Height / 2 - 40 * m.Polosa - 6 &&
-                            m.Y <= p.Height / 2 + 40 * t)
-                            {
-                                m.Speed = 1;
-                                PovorotD(m, p);
-                            }
-                            break;
-                    }
+                    RightTurn.StartTurn(c);
                 }
 
-                Move(m);
-                if (m.X < 0 || m.X > p.Width || m.Y < 0 || m.Y > p.Height)
-                 {
-                     Deleter.Add(m);
-                 }
+                if (c.Turn == CTurn.Left)
+                {
+                    LeftTurn.StartTurn(c);
+                }
+                Move(c);
+                if (c.X < -50 || c.X > UserPanel.Width + 50 || c.Y < -50 || c.Y > UserPanel.Height + 50)
+                {
+                    Deleter.Add(c);
+                }
             }
             if (Deleter.Count != 0)
             {
                 foreach (var c in Deleter)
                 {
-                    Members.Remove(c);
+                    Cars.Remove(c);
                 }
             }
-            // Кол-во машин (левый верхний угол)
-            lb.Text = Members.Count.ToString();
-            p.Invalidate();
+            UserPanel.Invalidate();
         }
-
-
-        // Создать класс Поворот
-        public static void PovorotD(Car c, Panel p)
-        {
-            // c.Direct = new Vector(c.Direct.X + 0.12*tmp , c.Direct.Y - 0.007*tmp);
-            c.Direct = new Vector(c.Direct.X + 0.007, c.Direct.Y + 0.12);
-            c.Y += (int)c.Direct.Y * c.Speed;
-            c.X += (int)c.Direct.X * c.Speed;
-            //if (!PovorotEndCheck(c, p.Width/2 + 40*(c.Polosa)-2))
-            //{
-            //    c.Sprite = RotateImage(c.Sprite, 3);                
-            //}
-
-            if (!(c.Y >= p.Height / 2 + 40 * (c.Polosa) - 2))
-            {
-                c.Sprite = RotateImage(c.Sprite, 3);
-            }
-            else
-            {
-                c.Speed = 3;
-                //  c.Direct = new Vector(1, 0);
-                c.Direct = new Vector(0, 1);
-                //  c.Sprite = Helper.DefaultSpriteRight;
-                c.Sprite = Helper.DefaultSpriteDown;
-            }
-        }
-
-        public static void PovorotR(Car c, Panel p)
-        {
-            c.Direct = new Vector(c.Direct.X + 0.12, c.Direct.Y - 0.007);
-            //  c.Direct = new Vector(c.Direct.X + 0.007, c.Direct.Y + 0.12);
-            c.Y += (int)c.Direct.Y * c.Speed;
-            c.X += (int)c.Direct.X * c.Speed;
-            if (!(c.X >= p.Width / 2 + 40 * (c.Polosa) - 2))
-            {
-                c.Sprite = RotateImage(c.Sprite, 3);
-            }
-
-            //if (!PovorotEndCheck(c, p.Height / 2 + 40 * (c.Polosa) - 2))
-            //{
-            //    c.Sprite = RotateImage(c.Sprite, 3);
-            //}
-            else
-            {
-                c.Speed = 3;
-                c.Direct = new Vector(1, 0);
-                //c.Direct = new Vector(0, 1);
-                c.Sprite = Helper.DefaultSpriteRight;
-                //c.Sprite = Helper.DefaultSpriteDown;
-            }
-        }
-
-        private static Bitmap RotateImage(Bitmap input, float angle)
-        {
-            Bitmap result = new Bitmap(input.Height, input.Height);
-            Graphics g = Graphics.FromImage(result);
-            g.TranslateTransform((float)input.Width / 2, (float)input.Height / 2);
-            g.RotateTransform(angle);
-            g.TranslateTransform(-(float)input.Width / 2, -(float)input.Height / 2);
-            g.DrawImage(input, new Point(0, 0));
-            return result;
-        }
+        
 
         public static void Move(Car c)
         {
@@ -163,74 +122,32 @@ namespace UNR_Crossroad.Core
         {
             if (IsReady)
             {
-                _mainRoad.RenderRoad(sender as Panel, e);
-                foreach (var m in Members)
+                CurrentRoad.RenderRoad(sender as Panel, e);
+                foreach (var c in Cars)
                 {
-                    e.Graphics.DrawImage(m.Sprite, new Point(m.X, m.Y));
+                    e.Graphics.DrawImage(c.Sprite, new Point(c.X, c.Y));
                 }
             }
         }
 
 
-        public static void GenerateMembers_Tick(Panel p)
+        public static void GenerateMembers_Tick()
         {
-            switch (r.Next(1, 5))
+            CarCount.Text = (Convert.ToInt32(CarCount.Text) + 1).ToString();
+            switch (R.Next(1, 5))
             {
                 case 1:
-                    GenVerticalLeftCar(p);
+                    GenerateMembers.VerticalLeftCar();
                     break;
                 case 2:
-                    GenVerticalRightCar(p);
+                    GenerateMembers.VerticalRightCar();
                     break;
                 case 3:
-                    GenHorizontalUpCar(p);
+                    GenerateMembers.HorizontalUpCar();
                     break;
                 case 4:
-                    GenHorizontalDownCar(p);
+                    GenerateMembers.HorizontalDownCar();
                     break;
-            }
-        }
-
-        public static void GenVerticalRightCar(Panel p)
-        {
-            Bitmap bm = new Bitmap(Image.FromFile("img\\Car\\car1_blue.png"));
-            int newR = r.Next(0, _mainRoad.VerticalRoadRight);
-            if (!Members.Exists(c => c.X == p.Width / 2 - 8 + newR * 40 && c.Y + 55 >= p.Height))
-            {
-                Members.Add(new Car(p.Width / 2 - 8 + newR * 40, p.Height, 3, bm, new Vector(0, -1), newR + 1, Doroga.Right, Porovot.Right));
-            }
-        }
-
-        public static void GenVerticalLeftCar(Panel p)
-        {
-            Bitmap bm = new Bitmap(Image.FromFile("img\\Car\\car1_blue.png"));
-            bm.RotateFlip(RotateFlipType.Rotate180FlipNone);
-            int newR = r.Next(0, _mainRoad.VerticalRoadLeft);
-            if (!Members.Exists(c => c.X == p.Width / 2 - 34 - newR * 40 && c.Y - 55 <= 0))
-            {
-                Members.Add(new Car(p.Width / 2 - 50 - newR * 40, 0, 3, bm, new Vector(0, 1), newR + 1, Doroga.Left, Porovot.No));
-            }
-        }
-
-        public static void GenHorizontalUpCar(Panel p)
-        {
-            Bitmap bm = new Bitmap(Image.FromFile("img\\Car\\car1_blue.png"));
-            bm.RotateFlip(RotateFlipType.Rotate270FlipNone);
-            int newR = r.Next(0, _mainRoad.HorizontRoadUp);
-            if (!Members.Exists(c => c.Y == p.Height / 2 - 34 - newR * 40 && c.X + 55 >= p.Width))
-            {
-                Members.Add(new Car(p.Width, p.Height / 2 - 50 - newR * 40, 3, bm, new Vector(-1, 0), newR + 1, Doroga.Up, Porovot.No));
-            }
-        }
-
-        public static void GenHorizontalDownCar(Panel p)
-        {
-            Bitmap bm = new Bitmap(Image.FromFile("img\\Car\\car1_blue.png"));
-            bm.RotateFlip(RotateFlipType.Rotate90FlipNone);
-            int newR = r.Next(0, _mainRoad.HorizontRoadDown);
-            if (!Members.Exists(c => c.Y == p.Height / 2 + 6 + newR * 40 && c.X - 55 <= 0))
-            {
-                Members.Add(new Car(0, p.Height / 2 - 8 + newR * 40, 3, bm, new Vector(1, 0), newR + 1, Doroga.Down, Porovot.Right));
             }
         }
     }

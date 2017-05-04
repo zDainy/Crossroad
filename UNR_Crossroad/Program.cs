@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using UNR_Crossroad.Forms;
 
 namespace UNR_Crossroad
 {
@@ -16,9 +17,9 @@ namespace UNR_Crossroad
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-#if !DEBUG
+//#if !DEBUG
             new SplashScreen().ShowDialog();
-#endif
+//#endif
             Application.Run(new MainForm());
         }
     }
