@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
-using System.Runtime.Remoting.Channels;
-using System.Threading;
 using System.Windows.Forms;
 using Timer = System.Windows.Forms.Timer;
 
@@ -19,6 +17,9 @@ namespace UNR_Crossroad.Core
         public static Timer GenTimer { get; set; }
         public static Timer MoveTimer { get; set; }
         public static Timer WorkTimer { get; set; }
+        public static int LightsInterval1 { get; set; } = 10000;
+        public static int LightsInterval2 { get; set; } = 5000;
+        public static Timer LightsTimer { get; set; }
         public static Panel UserPanel { get; set; }
         public static RightTurn RightTurn { get; set; }
         public static LeftTurn LeftTurn { get; set; }
@@ -27,13 +28,14 @@ namespace UNR_Crossroad.Core
         public static TextBox WorkTime { get; set; }
         public static TextBox Cpm { get; set; }
         public static int WorkTm { get; set; }
-        
-
+        public static TrafficLight[] TrafficLights { get; set; }
         public static void Start()
         {
             MoveTimer.Start();
             GenTimer.Start();
             WorkTimer.Start();
+            LightsTimer.Start();
+            IsReady = true;
         }
 
         public static void Pause()
@@ -42,6 +44,7 @@ namespace UNR_Crossroad.Core
             GenTimer.Stop();
             WorkTimer.Stop();
         }
+
         public static void Stop()
         {
             Cars.Clear();
@@ -64,6 +67,7 @@ namespace UNR_Crossroad.Core
             Cars = new List<Car>();
             Deleter = new List<Car>();
             R = new Random();
+            TrafficLights = new TrafficLight[4];
             RightTurn = new RightTurn();
             LeftTurn = new LeftTurn();
             MoveTimer = new Timer { Interval = 10 };
@@ -72,6 +76,8 @@ namespace UNR_Crossroad.Core
             GenTimer.Tick += (sender, e) => GenerateMembers_Tick();
             WorkTimer = new Timer {Interval = 1000};
             WorkTimer.Tick += (sender, e) => Work_tick();
+            LightsTimer = new Timer {Interval = LightsInterval1};
+            LightsTimer.Tick += (sender, e) => TrafficLight.SwitchLight();
         }
 
         public static void Work_tick()
@@ -90,8 +96,7 @@ namespace UNR_Crossroad.Core
                 {
                     RightTurn.StartTurn(c);
                 }
-
-                if (c.Turn == CTurn.Left)
+                else if (c.Turn == CTurn.Left)
                 {
                     LeftTurn.StartTurn(c);
                 }
@@ -114,15 +119,19 @@ namespace UNR_Crossroad.Core
 
         public static void Move(Car c)
         {
-            c.Y += (int)c.Direct.Y * c.Speed;
-            c.X += (int)c.Direct.X * c.Speed;
+            c.Y += (int) c.Direct.Y*c.Speed;
+            c.X += (int) c.Direct.X*c.Speed;
         }
 
         public static void RenderMap(object sender, PaintEventArgs e)
         {
             if (IsReady)
             {
-                CurrentRoad.RenderRoad(sender as Panel, e);
+                CurrentRoad.RenderRoad(UserPanel, e);
+                foreach (var light in TrafficLights)
+                {
+                    TrafficLight.RenderLight(light,UserPanel, e);
+                }
                 foreach (var c in Cars)
                 {
                     e.Graphics.DrawImage(c.Sprite, new Point(c.X, c.Y));
@@ -130,11 +139,10 @@ namespace UNR_Crossroad.Core
             }
         }
 
-
         public static void GenerateMembers_Tick()
         {
             CarCount.Text = (Convert.ToInt32(CarCount.Text) + 1).ToString();
-            switch (R.Next(1, 5))
+            switch (R.Next(1, 3))
             {
                 case 1:
                     GenerateMembers.VerticalLeftCar();

@@ -71,6 +71,7 @@
     <Compile Include="GenerateMembers.cs" />
     <Compile Include="IMovementMember.cs" />
     <Compile Include="LeftTurn.cs" />
+    <Compile Include="TrafficLight.cs" />
     <Compile Include="Turn.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Road.cs" />

@@ -19,7 +19,7 @@ namespace UNR_Crossroad.Core
                 Engine.Cars.Add(new Car(Engine.UserPanel.Width / 2 - 8 + polosa * 40, Engine.UserPanel.Height, 3,
                     CarSprite.SpriteLibUp[sprite], sprite,
                     new Vector(0, -1), polosa + 1, Engine.CurrentRoad.VerticalRoadRight,
-                    Engine.CurrentRoad.HorizontRoadUp, CRoad.Right, CTurn.Left));
+                    Engine.CurrentRoad.HorizontRoadUp, CRoad.Right, CTurn.No));
             }
         }
 

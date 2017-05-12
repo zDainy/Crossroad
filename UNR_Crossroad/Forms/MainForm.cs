@@ -12,13 +12,13 @@ namespace UNR_Crossroad.Forms
         {
             InitializeComponent();
             panel_user.Paint += Engine.RenderMap;
-            Engine.Initialization();
-            Engine.IsReady = true;
             Engine.UserPanel = panel_user;
             Engine.CarCount = tbAll;
             Engine.CurrentlyCarCount = tbCur;
             Engine.WorkTime = tbTime;
             Engine.Cpm = tbCpm;
+            CarSprite.LoadCarSpriteLib();
+            Engine.Initialization();
         }
 
 

@@ -17,9 +17,9 @@ namespace UNR_Crossroad
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-//#if !DEBUG
+#if !DEBUG
             new SplashScreen().ShowDialog();
-//#endif
+#endif
             Application.Run(new MainForm());
         }
     }

@@ -27,7 +27,7 @@ namespace UNR_Crossroad.Forms
                 {
                     Opacity = 1;
                     openTimer.Stop();
-                    new Thread(() => CarSprite.LoadCarSpriteLib(lbLoad)).Start();
+               //     new Thread(() => CarSprite.LoadCarSpriteLib(lbLoad)).Start();
                 }
             };
             openTimer.Start();
