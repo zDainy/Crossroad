@@ -21,8 +21,10 @@ namespace UNR_Crossroad.Core
         public static Bitmap[] SpriteLibDown  = new Bitmap[42];
         public static Bitmap[] SpriteLibLeft  = new Bitmap[42];
         public static Bitmap[] SpriteLibRight  = new Bitmap[42];
-        public static Bitmap[] SpriteLibVerticalLights = new Bitmap[3];
-        public static Bitmap[] SpriteLibHorizontalLights = new Bitmap[3];
+        public static Bitmap[] SpriteLibDownLights = new Bitmap[3];
+        public static Bitmap[] SpriteLibLeftLights = new Bitmap[3];
+        public static Bitmap[] SpriteLibUpLights = new Bitmap[3];
+        public static Bitmap[] SpriteLibRightLights = new Bitmap[3];
         public static Label Lb { get; set; }
         public static bool IsDone { get; set; }
         private static int _delay = 20;
@@ -36,8 +38,10 @@ namespace UNR_Crossroad.Core
             LoadRightSprite();
             LoadDownSprite();
             LoadLeftSprite();
-            LoadVerticalLightsSprite();
-            LoadHorizontalLightsSprite();
+            LoadDownLightsSprite();
+            LoadLeftLightsSprite();
+            LoadRightLightSprite();
+            LoadUpLightSprite();
            // Lb.Invoke(new Action(() => Lb.Text = "Loading complete"));
             Thread.Sleep(1000);
             IsDone = true;
@@ -105,26 +109,52 @@ namespace UNR_Crossroad.Core
             }
         }
 
-        private static void LoadVerticalLightsSprite()
+        private static void LoadDownLightsSprite()
         {
             //   Lb.Invoke(new Action(() => Lb.Text = "TrafficLights ..   " + img\\Lights\\VerticalLights.spr));
-            SpriteLibVerticalLights[0] = new Bitmap(Image.FromFile("img\\Lights\\Red.png"));
-            SpriteLibVerticalLights[1] = new Bitmap(Image.FromFile("img\\Lights\\Yellow.png"));
-            SpriteLibVerticalLights[2] = new Bitmap(Image.FromFile("img\\Lights\\Green.png"));
+            SpriteLibDownLights[0] = new Bitmap(Image.FromFile("img\\Lights\\Red.png"));
+            SpriteLibDownLights[1] = new Bitmap(Image.FromFile("img\\Lights\\Yellow.png"));
+            SpriteLibDownLights[2] = new Bitmap(Image.FromFile("img\\Lights\\Green.png"));
             //   Thread.Sleep(_delay);
         }
-        private static void LoadHorizontalLightsSprite()
+        private static void LoadUpLightSprite()
+        {
+            _tmpBitmap = new Bitmap(Image.FromFile("img\\Lights\\Red.png"));
+            _tmpBitmap.RotateFlip(RotateFlipType.Rotate180FlipNone);
+            SpriteLibUpLights[0] = _tmpBitmap;
+            _tmpBitmap = new Bitmap(Image.FromFile("img\\Lights\\Yellow.png"));
+            _tmpBitmap.RotateFlip(RotateFlipType.Rotate180FlipNone);
+            SpriteLibUpLights[1] = _tmpBitmap;
+            _tmpBitmap = new Bitmap(Image.FromFile("img\\Lights\\Green.png"));
+            _tmpBitmap.RotateFlip(RotateFlipType.Rotate180FlipNone);
+            SpriteLibUpLights[2] = _tmpBitmap;
+        }
+
+        private static void LoadRightLightSprite()
+        {
+            _tmpBitmap = new Bitmap(Image.FromFile("img\\Lights\\Red.png"));
+            _tmpBitmap.RotateFlip(RotateFlipType.Rotate270FlipNone);
+            SpriteLibRightLights[0] = _tmpBitmap;
+            _tmpBitmap = new Bitmap(Image.FromFile("img\\Lights\\Yellow.png"));
+            _tmpBitmap.RotateFlip(RotateFlipType.Rotate270FlipNone);
+            SpriteLibRightLights[1] = _tmpBitmap;
+            _tmpBitmap = new Bitmap(Image.FromFile("img\\Lights\\Green.png"));
+            _tmpBitmap.RotateFlip(RotateFlipType.Rotate270FlipNone);
+            SpriteLibRightLights[2] = _tmpBitmap;
+        }
+
+        private static void LoadLeftLightsSprite()
         {
             //   Lb.Invoke(new Action(() => Lb.Text = "TrafficLights ..   " + img\\Lights\\HorizontalLights.spr));
             _tmpBitmap = new Bitmap(Image.FromFile("img\\Lights\\Red.png"));
             _tmpBitmap.RotateFlip(RotateFlipType.Rotate90FlipNone);
-            SpriteLibHorizontalLights[0] = _tmpBitmap;
+            SpriteLibLeftLights[0] = _tmpBitmap;
             _tmpBitmap = new Bitmap(Image.FromFile("img\\Lights\\Yellow.png"));
             _tmpBitmap.RotateFlip(RotateFlipType.Rotate90FlipNone);
-            SpriteLibHorizontalLights[1] = _tmpBitmap;
+            SpriteLibLeftLights[1] = _tmpBitmap;
             _tmpBitmap = new Bitmap(Image.FromFile("img\\Lights\\Green.png"));
             _tmpBitmap.RotateFlip(RotateFlipType.Rotate90FlipNone);
-            SpriteLibHorizontalLights[2] = _tmpBitmap;
+            SpriteLibLeftLights[2] = _tmpBitmap;
             //   Thread.Sleep(_delay);
         }
     }

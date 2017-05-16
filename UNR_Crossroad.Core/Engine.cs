@@ -17,8 +17,8 @@ namespace UNR_Crossroad.Core
         public static Timer GenTimer { get; set; }
         public static Timer MoveTimer { get; set; }
         public static Timer WorkTimer { get; set; }
-        public static int LightsInterval1 { get; set; } = 10000;
-        public static int LightsInterval2 { get; set; } = 5000;
+        public static int LightsInterval1 { get; set; }
+        public static int LightsInterval2 { get; set; }
         public static Timer LightsTimer { get; set; }
         public static Panel UserPanel { get; set; }
         public static RightTurn RightTurn { get; set; }

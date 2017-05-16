@@ -10,6 +10,8 @@ namespace UNR_Crossroad.Forms
 
         public MainForm()
         {
+            Engine.LightsInterval1 = 10000;
+            Engine.LightsInterval2 = 5000;
             InitializeComponent();
             panel_user.Paint += Engine.RenderMap;
             Engine.UserPanel = panel_user;

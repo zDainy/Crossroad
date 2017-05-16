@@ -16,7 +16,7 @@ namespace UNR_Crossroad.Core
         public int CurrInterval { get; set; }
         public Osb LightOsb { get; set; }
 
-        public TrafficLight(Point pl,Lights lights, int interval,Osb osb)
+        public TrafficLight(Point pl, Lights lights, int interval, Osb osb)
         {
             Place = pl;
             CurrLight = lights;
@@ -30,29 +30,45 @@ namespace UNR_Crossroad.Core
             if (Array.Exists(Engine.TrafficLights, t => t == null))
             {
                 Engine.TrafficLights[0] = new TrafficLight(new Point(p.Width / 2 - Engine.CurrentRoad.VerticalRoadLeft * 40 - 40, p.Height / 2 - Engine.CurrentRoad.HorizontRoadUp * 40 - 155), Lights.Green,
-                    Engine.LightsInterval1, Osb.Vertical);
+                    Engine.LightsInterval1, Osb.Up);
                 Engine.TrafficLights[1] = new TrafficLight(new Point(p.Width / 2 + Engine.CurrentRoad.VerticalRoadRight * 40 + 80, p.Height / 2 - Engine.CurrentRoad.HorizontRoadUp * 40 - 40), Lights.Red,
-                    Engine.LightsInterval1, Osb.Horizontal);
-                Engine.TrafficLights[2] = new TrafficLight(new Point(p.Width / 2 - Engine.CurrentRoad.VerticalRoadLeft * 40 - 155, p.Height / 2 + Engine.CurrentRoad.HorizontRoadDown * 40 ), Lights.Red,
-                    Engine.LightsInterval1, Osb.Horizontal);
-                Engine.TrafficLights[3] = new TrafficLight(new Point(p.Width / 2 + Engine.CurrentRoad.VerticalRoadLeft * 40 , p.Height / 2 + Engine.CurrentRoad.HorizontRoadDown * 40 + 80), Lights.Green,
-                    Engine.LightsInterval1, Osb.Vertical);
+                    Engine.LightsInterval1, Osb.Left);
+                Engine.TrafficLights[2] = new TrafficLight(new Point(p.Width / 2 - Engine.CurrentRoad.VerticalRoadLeft * 40 - 155, p.Height / 2 + Engine.CurrentRoad.HorizontRoadDown * 40), Lights.Red,
+                    Engine.LightsInterval1, Osb.Right);
+                Engine.TrafficLights[3] = new TrafficLight(new Point(p.Width / 2 + Engine.CurrentRoad.VerticalRoadLeft * 40, p.Height / 2 + Engine.CurrentRoad.HorizontRoadDown * 40 + 80), Lights.Green,
+                    Engine.LightsInterval1, Osb.Down);
             }
             else
             {
                 switch (tl.CurrLight)
                 {
                     case Lights.Red:
-                        e.Graphics.DrawImage(tl.LightOsb == Osb.Vertical? CarSprite.SpriteLibVerticalLights[0]: CarSprite.SpriteLibHorizontalLights[0], tl.Place);
+                        e.Graphics.DrawImage(ChoosenLight(tl.LightOsb, 0), tl.Place);
                         break;
                     case Lights.Yellow:
-                        e.Graphics.DrawImage(tl.LightOsb == Osb.Vertical ? CarSprite.SpriteLibVerticalLights[1] : CarSprite.SpriteLibHorizontalLights[1], tl.Place);
+                        e.Graphics.DrawImage(ChoosenLight(tl.LightOsb, 1), tl.Place);
                         break;
                     case Lights.Green:
-                        e.Graphics.DrawImage(tl.LightOsb == Osb.Vertical ? CarSprite.SpriteLibVerticalLights[2] : CarSprite.SpriteLibHorizontalLights[2], tl.Place);
+                        e.Graphics.DrawImage(ChoosenLight(tl.LightOsb, 2), tl.Place);
                         break;
                 }
             }
+        }
+
+        public static Bitmap ChoosenLight(Osb l, int i)
+        {
+            switch (l)
+            {
+                case Osb.Up:
+                    return CarSprite.SpriteLibUpLights[i];
+                case Osb.Right:
+                    return CarSprite.SpriteLibLeftLights[i];
+                case Osb.Down:
+                    return CarSprite.SpriteLibDownLights[i];
+                case Osb.Left:
+                    return CarSprite.SpriteLibRightLights[i];
+            }
+            return CarSprite.SpriteLibUpLights[i];
         }
 
         public static void SwitchLight()
@@ -81,11 +97,11 @@ namespace UNR_Crossroad.Core
 
         public enum Lights
         {
-            Red,Yellow,Green
+            Red, Yellow, Green
         }
         public enum Osb
         {
-            Horizontal,Vertical
+            Up, Down, Left, Right
         }
     }
 }
