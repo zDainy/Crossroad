@@ -9,37 +9,37 @@ namespace UNR_Crossroad.Core
             int t = CheckLanes(c.Polosa, c.StartRoadCount, c.FinishRoadCount);
             switch (c.StartRoad)
             {
-                case CRoad.Right:
-                    if (c.X <= Engine.UserPanel.Width / 2 + 40 * (t + c.StartRoadCount - c.FinishRoadCount) && c.X >= Engine.UserPanel.Width / 2 - 40 * (t + 2) - 17 &&
-                        c.Y >= Engine.UserPanel.Height / 2 - 40 * t - 6 &&
-                        c.Y <= Engine.UserPanel.Height / 2 + 40 * t)
+                case Side.Right:
+                    if (c.X <= Engine.UserPanel.Width / 2 + 40 * t && c.X >= Engine.UserPanel.Width / 2 - 40 * (t + 2) - 17 &&
+                        c.Y >= Engine.UserPanel.Height / 2 - 40 * Engine.CurrentRoad.HorizontRoadDown - 6 &&
+                        c.Y <= Engine.UserPanel.Height / 2 + 40 * Engine.CurrentRoad.HorizontRoadDown)
                     {
                         c.Speed = 1;
                         PovorotR(c);
                     }
                     break;
-                case CRoad.Down:
-                    if (c.X <= Engine.UserPanel.Width / 2 + 40 * t && c.X >= Engine.UserPanel.Width / 2 - 40 * (t + 1) - 17 &&
+                case Side.Down:
+                    if (c.X <= Engine.UserPanel.Width / 2 + 40 * Engine.CurrentRoad.VerticalRoadLeft && c.X >= Engine.UserPanel.Width / 2 - 40 * (Engine.CurrentRoad.VerticalRoadLeft + 1) - 17 &&
                         c.Y >= Engine.UserPanel.Height / 2 - 40 * t - 6 &&
-                        c.Y <= Engine.UserPanel.Height / 2 + 40 * (t + c.StartRoadCount - c.FinishRoadCount))
+                        c.Y <= Engine.UserPanel.Height / 2 + 40 * t)
                     {
                         c.Speed = 1;
                         PovorotD(c);
                     }
                     break;
-                case CRoad.Left:
-                    if (c.X <= Engine.UserPanel.Width / 2 + 40 * (t + c.StartRoadCount - c.FinishRoadCount) && c.X >= Engine.UserPanel.Width / 2 - 40 * (t + 4) - 17 &&
-                        c.Y >= Engine.UserPanel.Height / 2 - 40 * t - 56 &&
-                        c.Y <= Engine.UserPanel.Height / 2 + 40 * t)
+                case Side.Left:
+                    if (c.X <= Engine.UserPanel.Width / 2 + 40 * t  && c.X >= Engine.UserPanel.Width / 2 - 40 * (t + 4) - 17 &&
+                        c.Y >= Engine.UserPanel.Height / 2 - 40 * Engine.CurrentRoad.HorizontRoadUp - 56 &&
+                        c.Y <= Engine.UserPanel.Height / 2 + 40 * Engine.CurrentRoad.HorizontRoadUp)
                     {
                         c.Speed = 1;
                         PovorotL(c);
                     }
                     break;
-                case CRoad.Up:
-                    if (c.X <= Engine.UserPanel.Width / 2 + 40 * t && c.X >= Engine.UserPanel.Width / 2 - 40 * (t + 4) - 17 &&
+                case Side.Up:
+                    if (c.X <= Engine.UserPanel.Width / 2 + 40 * Engine.CurrentRoad.VerticalRoadRight && c.X >= Engine.UserPanel.Width / 2 - 40 * Engine.CurrentRoad.VerticalRoadRight - 17 &&
                         c.Y >= Engine.UserPanel.Height / 2 - 40 * t - 206 &&
-                        c.Y <= Engine.UserPanel.Height / 2 + 40 * (t + c.StartRoadCount - c.FinishRoadCount))
+                        c.Y <= Engine.UserPanel.Height / 2 + 40 * t)
                     {
                         c.Speed = 1;
                         PovorotU(c);
@@ -59,9 +59,10 @@ namespace UNR_Crossroad.Core
             }
             else
             {
+                c.CurrRoad = Side.Right;
                 c.Speed = 3;
                 c.Direct = new Vector(0, -1);
-                c.Sprite = CarSprite.SpriteLibUp[c.NSprite];
+                c.Sprite = Sprite.SpriteLibUp[c.NSprite];
             }
         }
 
@@ -76,9 +77,10 @@ namespace UNR_Crossroad.Core
             }
             else
             {
+                c.CurrRoad = Side.Up;
                 c.Speed = 3;
                 c.Direct = new Vector(-1, 0);
-                c.Sprite = CarSprite.SpriteLibLeft[c.NSprite];
+                c.Sprite = Sprite.SpriteLibLeft[c.NSprite];
             }
         }
 
@@ -93,9 +95,10 @@ namespace UNR_Crossroad.Core
             }
             else
             {
+                c.CurrRoad = Side.Left;
                 c.Speed = 3;
                 c.Direct = new Vector(0, 1);
-                c.Sprite = CarSprite.SpriteLibDown[c.NSprite];
+                c.Sprite = Sprite.SpriteLibDown[c.NSprite];
             }
         }
 
@@ -110,22 +113,23 @@ namespace UNR_Crossroad.Core
             }
             else
             {
+                c.CurrRoad = Side.Down;
                 c.Speed = 3;
                 c.Direct = new Vector(1, 0);
-                c.Sprite = CarSprite.SpriteLibRight[c.NSprite];
+                c.Sprite = Sprite.SpriteLibRight[c.NSprite];
             }
         }
 
         public override int CheckLanes(int polosa, int start, int finish)
         {
-            if (finish < start && polosa >= start + (finish - start) + 1)
-            {
-                return finish;
-            }
-            if (finish > start)
-            {
-                return polosa + finish - start;
-            }
+            //if (finish < start && polosa >= start + (finish - start) + 1)
+            //{
+            //    return finish;
+            //}
+            //if (finish > start)
+            //{
+            //    return polosa + finish - start;
+            //}
             return polosa;
         }
     }

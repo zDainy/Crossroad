@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -25,34 +24,33 @@ namespace UNR_Crossroad.Core
             LightOsb = osb;
         }
 
+        public static void CreateLight()
+        {
+                Engine.TrafficLights[0] = new TrafficLight(new Point(Engine.UserPanel.Width / 2 - Engine.CurrentRoad.VerticalRoadLeft * 40 - 40, Engine.UserPanel.Height / 2 - Engine.CurrentRoad.HorizontRoadUp * 40 - 215), Lights.Green,
+                Engine.LightsInterval1, Osb.Up);
+                Engine.TrafficLights[1] = new TrafficLight(new Point(Engine.UserPanel.Width / 2 + Engine.CurrentRoad.VerticalRoadRight * 40 + 114, Engine.UserPanel.Height / 2 - Engine.CurrentRoad.HorizontRoadUp * 40 - 40), Lights.Red,
+                Engine.LightsInterval1, Osb.Left);
+                Engine.TrafficLights[2] = new TrafficLight(new Point(Engine.UserPanel.Width / 2 - Engine.CurrentRoad.VerticalRoadLeft * 40 - 215, Engine.UserPanel.Height / 2 + Engine.CurrentRoad.HorizontRoadDown * 40), Lights.Red,
+                Engine.LightsInterval1, Osb.Right);
+                Engine.TrafficLights[3] = new TrafficLight(new Point(Engine.UserPanel.Width / 2 + Engine.CurrentRoad.VerticalRoadRight * 40, Engine.UserPanel.Height / 2 + Engine.CurrentRoad.HorizontRoadDown * 40 + 114), Lights.Green,
+                Engine.LightsInterval1, Osb.Down);
+        }
+
         public static void RenderLight(TrafficLight tl, Panel p, PaintEventArgs e)
         {
-            if (Array.Exists(Engine.TrafficLights, t => t == null))
+            switch (tl.CurrLight)
             {
-                Engine.TrafficLights[0] = new TrafficLight(new Point(p.Width / 2 - Engine.CurrentRoad.VerticalRoadLeft * 40 - 40, p.Height / 2 - Engine.CurrentRoad.HorizontRoadUp * 40 - 155), Lights.Green,
-                    Engine.LightsInterval1, Osb.Up);
-                Engine.TrafficLights[1] = new TrafficLight(new Point(p.Width / 2 + Engine.CurrentRoad.VerticalRoadRight * 40 + 80, p.Height / 2 - Engine.CurrentRoad.HorizontRoadUp * 40 - 40), Lights.Red,
-                    Engine.LightsInterval1, Osb.Left);
-                Engine.TrafficLights[2] = new TrafficLight(new Point(p.Width / 2 - Engine.CurrentRoad.VerticalRoadLeft * 40 - 155, p.Height / 2 + Engine.CurrentRoad.HorizontRoadDown * 40), Lights.Red,
-                    Engine.LightsInterval1, Osb.Right);
-                Engine.TrafficLights[3] = new TrafficLight(new Point(p.Width / 2 + Engine.CurrentRoad.VerticalRoadLeft * 40, p.Height / 2 + Engine.CurrentRoad.HorizontRoadDown * 40 + 80), Lights.Green,
-                    Engine.LightsInterval1, Osb.Down);
+                case Lights.Red:
+                    e.Graphics.DrawImage(ChoosenLight(tl.LightOsb, 0), tl.Place);
+                    break;
+                case Lights.Yellow:
+                    e.Graphics.DrawImage(ChoosenLight(tl.LightOsb, 1), tl.Place);
+                    break;
+                case Lights.Green:
+                    e.Graphics.DrawImage(ChoosenLight(tl.LightOsb, 2), tl.Place);
+                    break;
             }
-            else
-            {
-                switch (tl.CurrLight)
-                {
-                    case Lights.Red:
-                        e.Graphics.DrawImage(ChoosenLight(tl.LightOsb, 0), tl.Place);
-                        break;
-                    case Lights.Yellow:
-                        e.Graphics.DrawImage(ChoosenLight(tl.LightOsb, 1), tl.Place);
-                        break;
-                    case Lights.Green:
-                        e.Graphics.DrawImage(ChoosenLight(tl.LightOsb, 2), tl.Place);
-                        break;
-                }
-            }
+            
         }
 
         public static Bitmap ChoosenLight(Osb l, int i)
@@ -60,15 +58,15 @@ namespace UNR_Crossroad.Core
             switch (l)
             {
                 case Osb.Up:
-                    return CarSprite.SpriteLibUpLights[i];
+                    return Sprite.SpriteLibUpLights[i];
                 case Osb.Right:
-                    return CarSprite.SpriteLibLeftLights[i];
+                    return Sprite.SpriteLibLeftLights[i];
                 case Osb.Down:
-                    return CarSprite.SpriteLibDownLights[i];
+                    return Sprite.SpriteLibDownLights[i];
                 case Osb.Left:
-                    return CarSprite.SpriteLibRightLights[i];
+                    return Sprite.SpriteLibRightLights[i];
             }
-            return CarSprite.SpriteLibUpLights[i];
+            return Sprite.SpriteLibUpLights[i];
         }
 
         public static void SwitchLight()
@@ -78,7 +76,7 @@ namespace UNR_Crossroad.Core
                 switch (light.CurrLight)
                 {
                     case Lights.Red:
-                        Engine.LightsTimer.Interval = 2000;
+                        Engine.LightsTimer.Interval = 3000;
                         light.CurrLight = Lights.Yellow;
                         break;
                     case Lights.Yellow:
@@ -88,10 +86,18 @@ namespace UNR_Crossroad.Core
                         light.NextLight = light.NextLight == Lights.Green ? Lights.Red : Lights.Green;
                         break;
                     case Lights.Green:
-                        Engine.LightsTimer.Interval = 2000;
+                        Engine.LightsTimer.Interval = 3000;
                         light.CurrLight = Lights.Yellow;
                         break;
                 }
+            }
+        }
+
+        public static void Clear()
+        {
+            for (int i = 0; i < Engine.TrafficLights.Length; i++)
+            {
+                Engine.TrafficLights[i] = null;
             }
         }
 

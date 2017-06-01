@@ -18,7 +18,7 @@ namespace UNR_Crossroad.Core
         
     }
 
-    public enum CRoad
+    public enum Side
     {
         Right, Left, Up, Down
     }

@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 // Управление общими сведениями о сборке осуществляется с помощью 
 // набора атрибутов. Измените значения этих атрибутов, чтобы изменить сведения,
 // связанные со сборкой.
-[assembly: AssemblyTitle("UNR_Crossroad")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("Моделирование перекрестка")]
+[assembly: AssemblyDescription("Автоматизированная система моделирования движения на регулируемом перекрестке")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("Самарский университет")]
 [assembly: AssemblyProduct("UNR_Crossroad")]
-[assembly: AssemblyCopyright("Copyright ©  2017")]
+[assembly: AssemblyCopyright("Copyright © Михеева Т. И. , Головнин О.К. , Котов А.В. , Каназин И.А. , 2017")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -32,5 +32,5 @@ using System.Runtime.InteropServices;
 // Можно задать все значения или принять номера сборки и редакции по умолчанию 
 // используя "*", как показано ниже:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.0.0.0")]
-[assembly: AssemblyFileVersion("1.0.0.0")]
+[assembly: AssemblyVersion("3.1.0.3")]
+[assembly: AssemblyFileVersion("3.1.0.3")]

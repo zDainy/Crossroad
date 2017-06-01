@@ -27,7 +27,7 @@ namespace UNR_Crossroad.Forms
                 {
                     Opacity = 1;
                     openTimer.Stop();
-               //     new Thread(() => CarSprite.LoadCarSpriteLib(lbLoad)).Start();
+                    new Thread(() => Sprite.LoadCarSpriteLib(lbLoad)).Start();
                 }
             };
             openTimer.Start();
@@ -35,7 +35,7 @@ namespace UNR_Crossroad.Forms
             // Ожидание 6 сек.
             waiTimer.Tick += (sender, e) =>
             {
-                if (CarSprite.IsDone)
+                if (Sprite.IsDone)
                 {
                     closeTimer.Start();
                 }

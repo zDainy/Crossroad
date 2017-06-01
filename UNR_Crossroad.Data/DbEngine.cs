@@ -2,10 +2,7 @@
 using System.Collections.Generic;
 using System.Data.Common;
 using System.Data.SQLite;
-using System.Linq;
-using System.Security.Principal;
-using System.Text;
-using System.Threading.Tasks;
+using UNR_Crossroad.Core;
 
 namespace UNR_Crossroad.Data
 {
@@ -64,6 +61,132 @@ namespace UNR_Crossroad.Data
             command = new SQLiteCommand("INSERT INTO 'Users' ('id','login','password','level') VALUES ((SELECT MAX(id) FROM Users)+1,'"+login+"','"+pass+"',"+lvl+");",connect);
             command.ExecuteNonQuery();
             return "Пользователь добавлен";
+        }
+
+        public static void SaveRoad(string name,int right, int left, int up, int down,int i1,int i2,bool pright, bool pleft, bool pup, bool pdown)
+        {
+            command = new SQLiteCommand("INSERT INTO 'Crossroads' VALUES ((SELECT MAX(id) FROM Crossroads)+1,'" + name + "'," + right + "," + left + "," + up + "," + down + "," + i1 + "," + i2 + ",'" + pright + "','" + pleft + "','" + pup + "','" + pdown + "');", connect);
+            command.ExecuteNonQuery();
+        }
+
+        public static Dictionary<int, string> GetRoads()
+        {
+            Connect();
+            command = new SQLiteCommand("SELECT * FROM 'Crossroads';", connect);
+            reader = command.ExecuteReader();
+            Dictionary<int, string> roads = new Dictionary<int, string>();
+            foreach (DbDataRecord record in reader)
+            {
+                roads.Add(Convert.ToInt32(record["id"]), record["name"].ToString());
+            }
+            Close();
+            return roads;
+        }
+
+        public static bool NameCheck(string name)
+        {
+            Connect();
+            command = new SQLiteCommand("SELECT * FROM 'Crossroads' WHERE name='" + name + "';", connect);
+            reader = command.ExecuteReader();
+            bool b = reader.HasRows;
+            Close();
+            return b;
+        }
+
+        public static void DeleteSelectedId(int id)
+        {
+            Connect();
+            command = new SQLiteCommand("DELETE FROM 'Crossroads' WHERE id="+id, connect);
+            command.ExecuteNonQuery();
+            Close();
+        }
+        public static void DeleteSelectedName(string name)
+        {
+            Connect();
+            command = new SQLiteCommand("DELETE FROM 'Crossroads' WHERE name='" + name + "'", connect);
+            command.ExecuteNonQuery();
+            Close();
+        }
+
+        public static Road LoadRoadSelectedId(int id)
+        {
+            Connect();
+            command = new SQLiteCommand("SELECT * FROM 'Crossroads' WHERE id=" + id, connect);
+            reader = command.ExecuteReader();
+            Road r = null;
+            foreach (DbDataRecord record in reader)
+            {
+                r = new Road(Convert.ToInt32(record["polLeft"]), Convert.ToInt32(record["polRight"]), Convert.ToInt32(record["polUp"]), Convert.ToInt32(record["polDown"]));
+            }
+            Close();
+            return r;
+        }
+        public static Road LoadRoadSelectedName(string name)
+        {
+            Connect();
+            command = new SQLiteCommand("SELECT * FROM 'Crossroads' WHERE name='" + name + "'", connect);
+            reader = command.ExecuteReader();
+            Road r = null;
+            foreach (DbDataRecord record in reader)
+            {
+                r = new Road(Convert.ToInt32(record["polLeft"]), Convert.ToInt32(record["polRight"]), Convert.ToInt32(record["polUp"]), Convert.ToInt32(record["polDown"]));
+            }
+            Close();
+            return r;
+        }
+        public static RoadTransit LoadTransitSelectedName(string name)
+        {
+            Connect();
+            command = new SQLiteCommand("SELECT * FROM 'Crossroads' WHERE name='" + name + "'", connect);
+            reader = command.ExecuteReader();
+            RoadTransit r = null;
+            foreach (DbDataRecord record in reader)
+            {
+                r = new RoadTransit(Convert.ToBoolean(record["peoUp"]), Convert.ToBoolean(record["peoDown"]), Convert.ToBoolean(record["peoLeft"]), Convert.ToBoolean(record["peoRight"]), Convert.ToInt32(record["polLeft"]), Convert.ToInt32(record["polRight"]), Convert.ToInt32(record["polUp"]), Convert.ToInt32(record["polDown"]));
+            }
+            Close();
+            return r;
+        }
+
+        public static RoadTransit LoadTransitSelectedId(int id)
+        {
+            Connect();
+            command = new SQLiteCommand("SELECT * FROM 'Crossroads' WHERE id=" + id, connect);
+            reader = command.ExecuteReader();
+            RoadTransit r = null;
+            foreach (DbDataRecord record in reader)
+            {
+                r = new RoadTransit(Convert.ToBoolean(record["peoUp"]), Convert.ToBoolean(record["peoDown"]), Convert.ToBoolean(record["peoLeft"]), Convert.ToBoolean(record["peoRight"]), Convert.ToInt32(record["polLeft"]), Convert.ToInt32(record["polRight"]), Convert.ToInt32(record["polUp"]), Convert.ToInt32(record["polDown"]));
+            }
+            Close();
+            return r;
+        }
+        public static int LoadIntervalName(string name, int i)
+        {
+            Connect();
+            command = new SQLiteCommand("SELECT * FROM 'Crossroads' WHERE name='" + name + "'", connect);
+            reader = command.ExecuteReader();
+            int r = 30;
+            foreach (DbDataRecord record in reader)
+            {
+                r = Convert.ToInt32(record["int" + i]);
+            }
+            Close();
+            return r;
+        }
+
+        public static int LoadIntervalId(int id,int i)
+        {
+            Connect();
+            command = new SQLiteCommand("SELECT * FROM 'Crossroads' WHERE id=" + id, connect);
+            reader = command.ExecuteReader();
+            int r = 30;
+            foreach (DbDataRecord record in reader)
+            {
+                r =Convert.ToInt32(record["int"+i]);
+            }
+            Close();
+            return r;
         }
 
         public static void Close()
